@@ -1,0 +1,15 @@
+.subjectsWrapper {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    overflow: hidden;
+    overflow-y: auto;
+    gap: .5rem;
+    padding-bottom: 6rem;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}

@@ -1,0 +1,63 @@
+.infoBox {
+    position: absolute;
+    width: fit-content;
+    top: 90%;
+    left: 50%;
+    background-color: white;
+    font-family: var(--font);
+    box-shadow: 0 5px 10px -5px black;
+}
+
+.showInfoBox {
+    opacity: 0;
+    animation: popUp .3s .5s ease forwards;
+}
+
+.hideInfoBox {
+    opacity: 0;
+    display: none;
+}
+
+.animHideInfo {
+    opacity: 1;
+    animation: popDown .3s ease forwards;
+}
+
+.infoBox>ul {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.infoBox>ul>li {
+    text-align: start;
+    color: var(--thirty-percent);
+    background-color: white;
+    padding: .5rem .25rem;
+}
+
+@keyframes popUp {
+    to {
+        opacity: 1;
+        display: flex;
+    }
+}
+
+@keyframes popDown {
+    to {
+        opacity: 0;
+    }
+}
+
+@media screen and (max-width: 400px) and (max-height: 900px) {
+    .infoBox {
+        position: absolute;
+        width: fit-content;
+        top: 90%;
+        left: -100%;
+        padding: .35rem;
+        background-color: white;
+        font-family: var(--font);
+        box-shadow: 0 5px 10px -5px black;
+    }
+}

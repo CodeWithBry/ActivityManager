@@ -1,0 +1,138 @@
+.noActivities {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    text-indent: 1rem;
+}
+
+.showMenu {
+    display: flex;
+    flex-direction: column;
+    width: 10rem;
+    position: absolute;
+    background-color: #e8e8e8;
+    box-shadow: 0 5px 10px -5px black;
+    z-index: 1;
+}
+
+.showMenu>button {
+    display: flex;
+    justify-content: baseline;
+    padding: .5rem .2rem;
+    color: var(--thirty-percent);
+    border: none;
+    font-weight: 500;
+    font-family: var(--font);
+}
+
+.showMenu>button:hover {
+    background-color: var(--thirty-percent);
+    color: white;
+}
+
+.showMenu>button>i {
+    margin: 0 .5rem;
+}
+
+.hideMenu {
+    display: none;
+}
+
+.addActivity {
+    flex-shrink: 0;
+    color: var(--thirty-percent);
+    background-color: var(--thirty-percent);
+    box-shadow: 0 5px 10px -5px black;
+    ;
+    padding: 1rem;
+    width: 7rem;
+    height: 7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    border-radius: .75rem;
+    overflow: hidden;
+    margin-left: .5rem;
+    margin-bottom: auto;
+    margin-top: auto;
+    transition: .3s ease;
+    cursor: pointer;
+}
+
+.addActivity:hover {
+    opacity: .8;
+}
+
+.addActivity h1 {
+    text-align: center;
+    color: white;
+    font-size: 4rem;
+}
+
+.hamWrapper {
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    padding: .3rem .5rem;
+    color: var(--thirty-percent);
+    font-weight: bolder;
+    border: none;
+    background-color: white;
+    border: none;
+    position: relative;
+    font-family: var(--font);
+    font-size: clamp(.5rem, 2vw, .75rem);
+}
+
+.hamWrapper>p {
+    display: flex;
+    gap: .3rem;
+}
+
+.hamWrapper .dropDownMenus {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    color: var(--thirty-percent);
+    box-shadow: 0 5px 4px -1px rgb(136, 135, 135);
+    z-index: 3;
+}
+
+.hamWrapper .dropDownMenus>li {
+    display: flex;
+    padding: .3rem .5rem;
+    font-size: clamp(.5rem, 2vw, .75rem);
+}
+
+.hamWrapper .dropDownMenus>li:hover {
+    box-shadow: inset 0 0px 4px -1px rgb(203, 203, 203);
+}
+
+.hamWrapper .dropDownMenus>li>i {
+    margin-right: .5rem;
+}
+
+.hideDropDown {
+    display: none;
+}
+
+@media screen and (max-width: 400px) {
+    .hamWrapper .dropDownMenus {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 100%;
+        background-color: white;
+        color: var(--thirty-percent);
+        box-shadow: 0 5px 4px -1px rgb(136, 135, 135);
+        z-index: 3;
+    }
+    .hamWrapper .dropDownMenus>li:hover {
+        box-shadow: inset 0 0px 4px -1px rgb(125, 125, 125);
+    }
+}

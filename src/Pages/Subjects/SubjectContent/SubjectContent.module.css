@@ -1,0 +1,263 @@
+.subConWrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
+    margin: auto;
+    font-family: var(--font);
+    width: 100%;
+    height: 100%;
+}
+
+.topComponent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem;
+}
+
+.topComponent #backButt {
+    background-color: var(--ten-percent);
+    color: white;
+    padding: .5rem .75rem;
+    font-size: clamp(.75rem, 2vw, 1.2rem);
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: .5rem;
+}
+
+.topComponent>h1 {
+    background-color: var(--thirty-percent);
+    color: white;
+    padding: .5rem .75rem;
+    font-size: clamp(.75rem, 5vw, 2.5rem);
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: .5rem;
+}
+
+.topComponent .right {
+    display: flex;
+    gap: .3rem;
+    align-items: center;
+}
+
+.right .wrapMenusButton {
+    display: none;
+}
+
+.right .wrap,
+.right .hideWrap {
+    display: flex;
+    align-items: center;
+}
+
+.selectedChoice {
+    position: relative;
+}
+
+.selectedChoice>button {
+    font-size: clamp(.5rem, 2vw, .75rem);
+    padding: .3rem .5rem;
+    margin-right: .5rem;
+    color: var(--thirty-percent);
+    font-weight: bolder;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    gap: .5rem;
+}
+
+.selectedChoice>button>i {
+    font-weight: 900;
+}
+
+.showChoices {
+    display: block;
+}
+
+.hideChoices {
+    display: none;
+}
+
+.choicesBox {
+    position: absolute;
+    left: 50%;
+    translate: -55%;
+    width: 100%;
+    box-shadow: 0 5px 10px -5px black;
+    z-index: 1;
+}
+
+.choicesBox>button {
+    font-size: clamp(.5rem, 2vw, .75rem);
+    color: var(--thirty-percent);
+    font-weight: bolder;
+    border: none;
+    background-color: var(--sixty-percent);
+    padding: .5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    transition: all .3s ease;
+}
+
+.choicesBox>button:hover {
+    box-shadow: inset 0 0px 4px -1px rgb(125, 125, 125);
+}
+
+
+/* CONTENT */
+
+.contentWrapper {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    gap: 1rem;
+    height: 100%;
+    width: 95%;
+    margin: 0 auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Adjust thumb color */
+        border-radius: 10px;
+        /* Adjust border radius */
+        border: 3px solid #f1f1f1;
+    }
+}
+
+.contentWrapper .subjectActs {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: fit-content;
+    height: fit-content;
+    gap: .5rem;
+    color: var(--ten-percent);
+}
+
+.subjectActs:nth-of-type(3) {
+    margin-bottom: 6rem;
+}
+
+.contentWrapper .subjectActs>h1 {
+    font-size: clamp(1.2rem, 2.5vw, 2.2rem);
+    display: flex;
+}
+
+.content {
+    display: flex;
+    width: 87vw;
+    padding: 2rem 1rem 2rem 0;
+    gap: .5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+        height: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #f1f1f1;
+        /* Adjust thumb color */
+        border-radius: 10px;
+    }
+}
+
+.content .selectAllButton {
+    display: block;
+    margin: auto 0;
+    font-size: 1.2rem;
+    border: none;
+    background: transparent;
+}
+
+.content .hideSelectAllButton {
+    display: none;
+}
+
+.content .selectAllButton>i {
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    background-color: var(--thirty-percent);
+    color: white;
+    border-radius: 1rem;
+    border: .2rem solid var(--thirty-percent);
+}
+
+.content .selectAllButton .transparent {
+    background-color: white;
+    color: var(--thirty-percent);
+    border: .2rem solid var(--thirty-percent);
+}
+
+@media screen and (max-width: 400px) {
+    .hideChoices {
+        display: none;
+    }
+    .right {
+        position: relative;
+    }
+    .right .wrap {
+        display: flex;
+        flex-direction: column;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        color: var(--thirty-percent);
+        box-shadow: 0 5px 4px -1px rgb(136, 135, 135);
+        position: absolute;
+    }
+    .right .hideWrap {
+        display: none;
+    }
+    .choicesBox {
+        position: relative;
+        left: 0;
+        translate: 0;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+    }
+    .selectedChoice>button {
+        font-size: clamp(.5rem, 2vw, .75rem);
+        padding: .3rem .5rem;
+        color: var(--thirty-percent);
+        font-weight: bolder;
+        border: none;
+        background-color: transparent;
+        display: flex;
+        gap: .5rem;
+    }
+    .right .wrap .selectedChoice>button,
+    .right .wrap>button {
+        width: 100%;
+        z-index: 2;
+    }
+    .right .wrap .selectedChoice:hover>button,
+    .right .wrap .selectedChoice>button:hover,
+    .right .wrap>button:hover {
+        background-color: var(--thirty-percent);
+        color: white;
+        width: 100%;
+    }
+    .right .wrapMenusButton {
+        display: grid;
+        place-items: center;
+        margin-left: auto;
+        background-color: var(--thirty-percent);
+        color: white;
+        font-weight: bolder;
+        border: none;
+        border-radius: .3rem;
+        position: relative;
+        font-family: var(--font);
+        padding: .5rem .75rem;
+        font-size: clamp(.75rem, 2vw, 1.2rem);
+    }
+}

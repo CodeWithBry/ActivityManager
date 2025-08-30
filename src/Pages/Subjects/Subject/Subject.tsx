@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom';
-import type { ContextType, Quarter, SchoolActivities, SubjectsType } from '../../../Interfaces/interface';
+import type { ContextType, SchoolActivities, SubjectContext, SubjectsType } from '../../../Interfaces/interface';
 import s from './Subject.module.css'
 import { useContext, useEffect, useState } from 'react';
 import { context } from '../../../App';
+import { SubjectsContext } from '../Subjects';
 type Props = {
     subData: SubjectsType;
 }
 
 function Subject({ subData }: Props) {
     const { userData } = useContext(context) as ContextType
-
-    const [showChoices, setShowChoices] = useState(false)
+    const { selectedQuarter } = useContext(SubjectsContext) as SubjectContext
 
     const [numberOfActivities, setNumberOfActivities] = useState(0)
     const [totalFinishedActivities, setTotalFinishedActivities] = useState(0)
@@ -25,28 +25,6 @@ function Subject({ subData }: Props) {
     const [activities, setActivities] = useState<SchoolActivities[] | null>()
     const [assignments, setAssignments] = useState<SchoolActivities[] | null>()
     const [projects, setProjects] = useState<SchoolActivities[] | null>()
-    const [selectedChoice, setSelectedChoice] = useState<Quarter>({ quarter: "2nd", sem: "1st" })
-    const [quarterAndSemChoices] = useState<Quarter[]>([
-        { quarter: "1st", sem: "1st" },
-        { quarter: "2nd", sem: "1st" },
-        { quarter: "3rd", sem: "2nd" },
-        { quarter: "4th", sem: "2nd" },
-    ])
-
-    function updateQuarter(choice: Quarter) {
-        const numOfAct = activities?.filter(act => act.subject == subData.subjectNameAbbreviation && choice.quarter == act.quarter)?.length
-        const numOfAss = assignments?.filter(act => act.subject == subData.subjectNameAbbreviation && choice.quarter == act.quarter)?.length
-        const numOfProj = projects?.filter(act => act.subject == subData.subjectNameAbbreviation && choice.quarter == act.quarter)?.length
-        const totalFinishedAct = activities?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && choice.quarter == act.quarter)?.length
-        const totalFinishedAss = assignments?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && choice.quarter == act.quarter)?.length
-        const totalFinishedProj = projects?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && choice.quarter == act.quarter)?.length
-        setNumberOfActivities(numOfAct ? numOfAct : 0)
-        setTotalFinishedActivities(totalFinishedAct ? totalFinishedAct : 0)
-        setNumberOfAssignment(numOfAss ? numOfAss : 0)
-        setTotalFinishedAssignment(totalFinishedAss ? totalFinishedAss : 0)
-        setNumberOfProjects(numOfProj ? numOfProj : 0)
-        setTotalFinishedProjects(totalFinishedProj ? totalFinishedProj : 0)
-    }
 
     useEffect(() => {
         const act = numberOfActivities > 0 ? (totalFinishedActivities / numberOfActivities) * 100 : 0
@@ -63,6 +41,24 @@ function Subject({ subData }: Props) {
     ])
 
     useEffect(() => {
+        if (selectedQuarter) {
+            const numOfAct = activities?.filter(act => act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
+            const numOfAss = assignments?.filter(act => act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
+            const numOfProj = projects?.filter(act => act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
+            const totalFinishedAct = activities?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
+            const totalFinishedAss = assignments?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
+            const totalFinishedProj = projects?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
+            console.log(activities)
+            setNumberOfActivities(numOfAct ? numOfAct : 0)
+            setTotalFinishedActivities(totalFinishedAct ? totalFinishedAct : 0)
+            setNumberOfAssignment(numOfAss ? numOfAss : 0)
+            setTotalFinishedAssignment(totalFinishedAss ? totalFinishedAss : 0)
+            setNumberOfProjects(numOfProj ? numOfProj : 0)
+            setTotalFinishedProjects(totalFinishedProj ? totalFinishedProj : 0)
+        }
+    }, [selectedQuarter, activities, assignments, projects])
+
+    useEffect(() => {
         if (userData) {
             setActivities(userData.activities)
             setAssignments(userData.assignments)
@@ -74,31 +70,6 @@ function Subject({ subData }: Props) {
         <div className={`${s.subjectBox}`} >
             <div className={s.topWrapper}>
                 <h1 className={s.subjectName}>{subData.subjectNameAbbreviation}</h1>
-
-                <div
-                    className={s.dropDownButton}
-                    onClick={() => { showChoices ? setShowChoices(false) : setShowChoices(true) }}>
-                    {selectedChoice.sem} Semester: {selectedChoice.quarter} Quarter
-                    <i className={showChoices ? 'fa fa-angle-up' : 'fa fa-angle-down'}></i>
-                    <div
-                        className={showChoices ?
-                            `${s.choicesBox} ${s.showChoices}` :
-                            `${s.choicesBox} ${s.hideChoices}`}>
-                        {
-                            quarterAndSemChoices.map((choice) => {
-                                return <button
-                                    key={Math.random() * 1}
-                                    onClick={() => {
-                                        setSelectedChoice(choice)
-                                        updateQuarter(choice)
-                                        setShowChoices(false)
-                                    }}>
-                                    {choice.sem} Sem: {choice.quarter} Quarter
-                                </button>
-                            })
-                        }
-                    </div>
-                </div>
             </div>
 
             <div className={s.progressWrapper}>

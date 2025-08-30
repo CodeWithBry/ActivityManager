@@ -4,9 +4,11 @@ import type { ContextType } from "../../Interfaces/interface";
 import { context } from "../../App";
 import { signOut } from "firebase/auth";
 import { auth } from "../../Firebase/Firebase";
+import { useNavigate } from "react-router-dom";
 
 function LogOutPrompt() {
     const { showLogOutPrompt, setShowLogOutPrompt, setUserObject, setUserData, setBasicInfo } = useContext(context) as ContextType
+    const navigation = useNavigate()
 
     async function handleLogOut() {
 
@@ -17,6 +19,7 @@ function LogOutPrompt() {
             setShowLogOutPrompt(false)
             setBasicInfo(false)
             localStorage.removeItem("User")
+            navigation("/")
         } catch (error) {
             setShowLogOutPrompt(false)
         }

@@ -1,10 +1,11 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, lazy, useEffect, useState } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import s from "./App.module.css"
-import Home from './Pages/Home/Home';
-import Subjects from './Pages/Subjects/Subjects';
-import Recap from './Pages/Recap/Recap.tsx';
-import Account from './Pages/Account/Account';
+
+const Home = lazy(() => import('./Pages/Home/Home'));
+const Subjects = lazy(() => import('./Pages/Subjects/Subjects'));
+const Recap = lazy(() => import('./Pages/Recap/Recap.tsx'));
+const Account = lazy(() => import('./Pages/Account/Account'))
 
 import Navbar from './Components/Navbar/Navbar';
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -92,20 +93,18 @@ function App() {
 
 
 
-  const signInWithFacebook = async ()  => {
+  const signInWithFacebook = async () => {
     const FBProvider = new FacebookAuthProvider
 
     FBProvider.addScope("public_profile")
     signInWithPopup(auth, FBProvider).then((result) => {
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      window.alert(result)
-      console.log(credential)
       const user = result.user;
       if (user) {
         setUserObject(user)
         handleUser(user)
+        window.location.reload()
       }
-    }).catch((error)=>{if(error instanceof FirebaseError) setErrorDescription(error.code)})
+    }).catch((error) => { if (error instanceof FirebaseError) setErrorDescription(error.code) })
   }
 
   async function handleUser(user: User | null) {
@@ -166,77 +165,58 @@ function App() {
 
 
   useEffect(() => {
-    function unsubscribe_2() {
-      const personalDatabase = doc(firestore, "McCarthy", `${userObject?.uid}`)
-      const mainDatabase = doc(firestore, "Main_Database", "School_Activities")
-      if (userObject?.uid) {
-        onSnapshot(mainDatabase, (snapshot: any) => {
-          if (snapshot.exists()) {
-            async function getDataFromFirestore() {
-              const getUserData = await getDoc(personalDatabase);
-              const origData = getUserData.data() as UserData | null;
-              if (origData?.activities || origData?.assignments || origData?.petas) {
-                const serializeAct: SchoolActivities[] = snapshot.data().Activity;
-                const serializeAss: SchoolActivities[] = snapshot.data().Assignment;
-                const serializeProj: SchoolActivities[] = snapshot.data().Project;
+    const personalDatabase = doc(firestore, "McCarthy", `${userObject?.uid}`);
+    const mainDatabase = doc(firestore, "Main_Database", "School_Activities");
 
-                // filter out activities that already exist (by description)
-                const newActivities = serializeAct.filter(act =>
-                  !origData.activities?.some(orig => orig.id === act.id)
-                );
-                const removedActivities = origData.activities?.filter(data =>
-                  !serializeAct.some(orig => orig.id === data.id)
-                ) || [];
-
-                const newAssignments = serializeAss.filter(ass =>
-                  !origData.assignments?.some(orig => orig.id === ass.id)
-                );
-                const removedAssignments = origData.assignments?.filter(data =>
-                  !serializeAss.some(orig => orig.id === data.id)
-                ) || [];
-
-                const newProjects = serializeProj.filter(proj =>
-                  !origData.petas?.some(orig => orig.id === proj.id)
-                );
-                const removedProjects = origData.petas?.filter(data =>
-                  !serializeProj.some(orig => orig.id === data.id)
-                ) || [];
-
-                if (removedActivities.length != 0 || removedAssignments.length != 0 || removedProjects.length != 0) {
-                  await updateDoc(personalDatabase, {
-                    activities: [...removedActivities, ...origData.activities],
-                    assignments: [...removedAssignments, ...origData.assignments],
-                    petas: [...removedProjects, ...origData.petas],
-                  })
-
-                  setUserData({
-                    ...origData,
-                    activities: [...removedActivities, ...origData.activities],
-                    assignments: [...removedAssignments, ...origData.assignments],
-                    petas: [...removedProjects, ...origData.petas],
-                  });
-                } else {
-                  setUserData({
-                    ...origData,
-                    activities: newActivities ? [...newActivities, ...origData.activities] : [],
-                    assignments: newAssignments ? [...newAssignments, ...origData.assignments] : [],
-                    petas: newProjects ? [...newProjects, ...origData.petas] : [],
-                  });
-                }
-
-              }
-            }
-
-            getDataFromFirestore();
-          } else {
-            setUserData(null);
-          }
-        }
-        );
+    const unsubscribe_2 = onSnapshot(mainDatabase, async (snapshot: any) => {
+      if (!snapshot.exists()) {
+        setUserData(null);
+        console.log("null")
+        return;
       }
-    }
 
-    unsubscribe_2()
+      const getUserData = await getDoc(personalDatabase);
+      const origData = getUserData.data() as UserData | null;
+
+      if (origData == null) {
+        console.log(origData)
+        return
+      };
+
+      // ✅ Data from Main DB
+      const mainActivities: SchoolActivities[] = snapshot.data().Activity;
+      const mainAssignments: SchoolActivities[] = snapshot.data().Assignment;
+      const mainProjects: SchoolActivities[] = snapshot.data().Project;
+
+      // ✅ Data from Personal DB
+      const userActivities = origData.activities;
+      const userAssignments = origData.assignments;
+      const userProjects = origData.petas;
+
+      // ✅ Find NEW items (exist in Main but not in Personal)
+      const newActivities = mainActivities.filter(act =>
+        !userActivities.some(u => u.id === act.id)
+      );
+      const newAssignments = mainAssignments.filter(ass =>
+        !userAssignments.some(u => u.id === ass.id)
+      );
+      const newProjects = mainProjects.filter(proj =>
+        !userProjects.some(u => u.id === proj.id)
+      );
+
+
+      await updateDoc(personalDatabase, {
+        activities: [...newActivities, ...userActivities],
+        assignments: [...newAssignments, ...userAssignments],
+        petas: [...newProjects, ...userProjects]
+      })
+      return setUserData({
+        ...origData,
+        activities: [...newActivities, ...userActivities],
+        assignments: [...newAssignments, ...userAssignments],
+        petas: [...newProjects, ...userProjects],
+      });
+    });
 
     return () => {
       unsubscribe_2();
@@ -253,11 +233,6 @@ function App() {
     }
   }, [userData, userObject])
 
-  useEffect(()=>{
-    if(userData) {
-      console.log(userData)
-    }
-  },[userData])
 
   // ********* CONTEXT VARIRABLES ***********
 

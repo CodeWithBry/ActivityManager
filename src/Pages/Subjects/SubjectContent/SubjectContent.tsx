@@ -1,6 +1,5 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import s from "./SubjectContent.module.css"
-import activity from "./Activity/Activity.module.css"
 import { createContext, useContext, useEffect, useRef, useState, type MouseEvent } from "react";
 import type { ContextType, MenuPosition, Quarter, SchoolActivities, SubjectContext, SubjectsType } from "../../../Interfaces/interface";
 import ActivityDescription from "./ActivityDescription/ActivityDescription";
@@ -18,7 +17,7 @@ export const SubjectContentContext = createContext({})
 
 
 interface Props {
-  params: string;
+  params: any;
   subjects: SubjectsType[];
 }
 
@@ -32,6 +31,7 @@ function SubjectContent({ params, subjects }: Props) {
   const { userData, userObject, setUserData } = useContext(context) as ContextType
   const { selectedQuarter, selectedSemester } = useContext(SubjectsContext) as SubjectContext
   const menu = useRef<HTMLDivElement | null>(null)
+  const navigation = useNavigate()
   const location = useLocation()
 
   const [activities, setActivities] = useState<SchoolActivities[] | null>(null)
@@ -193,7 +193,7 @@ function SubjectContent({ params, subjects }: Props) {
   }, [selectedChoice])
 
   useEffect(() => {
-    setSelectedChoice({quarter: selectedQuarter, sem: selectedSemester})
+    setSelectedChoice({ quarter: selectedQuarter, sem: selectedSemester })
   }, [selectedQuarter, selectedSemester])
 
   useEffect(() => {
@@ -210,9 +210,7 @@ function SubjectContent({ params, subjects }: Props) {
       if (activityId) {
         const activityEl = document.getElementById(activityId);
         activityEl?.scrollIntoView({ behavior: "smooth" });
-        if (activityEl) {
-          activityEl.classList.add(`${activity.highlight}`)
-        }
+
 
         switch (type) {
           case "Activity":
@@ -239,6 +237,12 @@ function SubjectContent({ params, subjects }: Props) {
             })
             break;
         }
+        if (activityEl) {
+          setTimeout(() => {
+            navigation(`/subjects/${params}`)
+          }, 1000)
+        }
+
       }
     }
   }, [location, activities]);
@@ -281,7 +285,7 @@ function SubjectContent({ params, subjects }: Props) {
 
   // COMPONENTS
 
-  return (
+  if (params) return (
     <SubjectContentContext.Provider value={ContextVariable}>
       <div className={s.subConWrapper} onClick={() => { setShowMenu(false) }}>
         <MenuBox task={actDesc} />

@@ -9,7 +9,108 @@
     overflow-y: auto;
     gap: .5rem;
     padding-bottom: 6rem;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
         display: none;
+    }
+}
+
+.stickyNav {
+    position: sticky;
+}
+
+.subjectsWrapper .top {
+    background: #fff;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-family: var(--font-title);
+}
+
+.subjectsWrapper .fixedNav {
+    position: absolute;
+    background: #fff;
+    box-shadow: 0 9px 10px -5px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    width: 90%;
+    padding: .3rem 0;
+}
+
+.fixedNav>h1,
+.fixedNav .dropDownButton {
+    margin: 0 .5rem;
+}
+
+.subjectsWrapper .top .dropDownButton {
+    font-size: clamp(.5rem, 2vw, .75rem);
+    height: fit-content;
+    padding: .3rem .5rem;
+    margin-right: .5rem;
+    color: var(--thirty-percent);
+    background-color: transparent;
+    font-weight: bolder;
+    border: none;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    position: relative;
+    transition: .3s ease;
+    cursor: pointer;
+}
+
+.subjectsWrapper .top .dropDownButton:hover {
+    color: var(--ten-percent);
+}
+
+.showChoices {
+    display: block;
+}
+
+.hideChoices {
+    display: none;
+}
+
+.choicesBox {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    box-shadow: 0 5px 10px -5px black;
+    z-index: 1;
+}
+
+.choicesBox>button {
+    font-size: clamp(.5rem, 2vw, .75rem);
+    color: var(--thirty-percent);
+    font-weight: bolder;
+    border: none;
+    background-color: var(--sixty-percent);
+    padding: .5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    transition: all .3s ease;
+}
+
+.choicesBox>button:hover {
+    box-shadow: inset 0 0px 4px -1px rgb(125, 125, 125);
+}
+
+.subjectsWrapper>section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 678px) and (max-height: 900px) {
+    .subjectsWrapper .fixedNav {
+        position: fixed;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        z-index: 1;
+        width: 100%;
+        padding: .3rem 0;
     }
 }

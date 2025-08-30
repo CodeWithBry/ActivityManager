@@ -1,59 +1,137 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import s from "./Subjects.module.css"
-import type { ContextType, SubjectsType } from "../../Interfaces/interface"
-import Subject from "./Subject/Subject"
-import subjectData from "../../../public/Subjects/subjects.json"
-import { context } from "../../App"
-import SubjectContent from "./SubjectContent/SubjectContent"
-import { useParams } from "react-router-dom"
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import s from "./Subjects.module.css";
+import type { ContextType, Quarter, SubjectsType } from "../../Interfaces/interface";
+import Subject from "./Subject/Subject";
+import subjectData from "../../../public/Subjects/subjects.json";
+import { context } from "../../App";
+import SubjectContent from "./SubjectContent/SubjectContent";
 
-export const SubjectsContext = createContext({})
+interface SubjectsContextType {
+  selectedQuarter: string;
+  setSelectedQuarter: React.Dispatch<React.SetStateAction<string>>;
+  selectedSemester: string;
+  setSelectedSemester: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const SubjectsContext = createContext<SubjectsContextType | null>(null);
 
 function Subjects() {
+  const { pageDetector, userObject } = useContext(context) as ContextType;
+  const { subjectName } = useParams<{ subjectName: string }>();
 
-  const { pageDetector, userObject } = useContext(context) as ContextType
-  const { subjectName } = useParams<{ subjectName: string }>()
-  const [subjects] = useState<SubjectsType[]>(subjectData)
-  const [selectedQuarter, setSelectedQuarter] = useState<string>("2nd")
-  const [selectedSemester, setSelectedSemester] = useState<string>("1st")
+  const [showChoices, setShowChoices] = useState(false);
+  const [isFixed, setIsFixed] = useState(false);
+
+  const [selectedQuarter, setSelectedQuarter] = useState("2nd");
+  const [selectedSemester, setSelectedSemester] = useState("1st");
+
+  const [subjects] = useState<SubjectsType[]>(subjectData);
+  const [selectedSemAndQuarter, setSelectedSemAndQuarter] = useState<Quarter>({
+    quarter: "2nd",
+    sem: "1st",
+  });
+
+  const [quarterAndSemChoices] = useState<Quarter[]>([
+    { quarter: "1st", sem: "1st" },
+    { quarter: "2nd", sem: "1st" },
+    { quarter: "3rd", sem: "2nd" },
+    { quarter: "4th", sem: "2nd" },
+  ]);
+
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const navRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (subjectName) pageDetector(null, 1, false)
-    else pageDetector(null, 1, false)
+    const wrapper = wrapperRef.current;
+    const nav = navRef.current;
+
+    if (!wrapper || !nav) return;
+
+    function handleScroll() {
+      const height = wrapper?.scrollTop;
+      const navHeight = nav?.scrollHeight;
+      if(!height || !navHeight) return
+      if (height > navHeight + 200) {
+        setIsFixed(true);
+      } else {
+        setIsFixed(false);
+      }
+    }
+
+    wrapper.addEventListener("scroll", handleScroll);
+    return () => wrapper.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    pageDetector(null, 1, false);
   }, [subjectName]);
 
   useEffect(() => {
     if (userObject?.uid) {
-      pageDetector(null, 1, false)
+      pageDetector(null, 1, false);
     } else {
-      pageDetector(0, null, true)
+      pageDetector(0, null, true);
     }
-  }, [])
+  }, [userObject]);
 
-  const variable = {
-    selectedQuarter, setSelectedQuarter,
-    selectedSemester, setSelectedSemester
-  }
+  const contextValue: SubjectsContextType = {
+    selectedQuarter,
+    setSelectedQuarter,
+    selectedSemester,
+    setSelectedSemester,
+  };
 
   return (
-    <>
-      <SubjectsContext.Provider value={variable}>
-        {
-          subjectName ?
-            <SubjectContent params={subjectName} subjects={subjects} /> :
-            <div className={s.subjectsWrapper}>
-              {
-                subjects.map((sub) => {
-                  return <Subject
-                    key={Math.random() * 1}
-                    subData={sub} />
-                })
-              }
+    <SubjectsContext.Provider value={contextValue}>
+      {subjectName ? (
+        <SubjectContent params={subjectName} subjects={subjects} />
+      ) : (
+        <div
+          ref={wrapperRef}
+          className={`${s.subjectsWrapper} ${isFixed ? s.paddingTop : s.paddingZero}`}
+        >
+          <header
+            ref={navRef}
+            id="SubjectNavigation"
+            className={`${s.top} ${isFixed ? s.fixedNav : s.stickyNav}`}
+          >
+            <h1>Subjects</h1>
+            <div className={s.dropDownButton} onClick={() => setShowChoices((prev) => !prev)}>
+              {selectedSemAndQuarter.sem} Semester: {selectedSemAndQuarter.quarter} Quarter
+              <i className={showChoices ? "fa fa-angle-up" : "fa fa-angle-down"}></i>
+              <div
+                className={
+                  showChoices
+                    ? `${s.choicesBox} ${s.showChoices}`
+                    : `${s.choicesBox} ${s.hideChoices}`
+                }
+              >
+                {quarterAndSemChoices.map((choice) => (
+                  <button
+                    key={`${choice.sem}-${choice.quarter}`}
+                    onClick={() => {
+                      setSelectedSemAndQuarter(choice);
+                      setSelectedQuarter(choice.quarter);
+                      setSelectedSemester(choice.sem);
+                    }}
+                  >
+                    {choice.sem} Sem: {choice.quarter} Quarter
+                  </button>
+                ))}
+              </div>
             </div>
-        }
-      </SubjectsContext.Provider>
-    </>
-  )
+          </header>
+
+          <section>
+            {subjects.map((sub) => (
+              <Subject key={sub.subjectTeacher} subData={sub} />
+            ))}
+          </section>
+        </div>
+      )}
+    </SubjectsContext.Provider>
+  );
 }
 
-export default Subjects
+export default Subjects;

@@ -21,7 +21,6 @@ function Subjects() {
   const { subjectName } = useParams<{ subjectName: string }>();
 
   const [showChoices, setShowChoices] = useState(false);
-  const [isFixed, setIsFixed] = useState(false);
 
   const [selectedQuarter, setSelectedQuarter] = useState("2nd");
   const [selectedSemester, setSelectedSemester] = useState("1st");
@@ -41,27 +40,6 @@ function Subjects() {
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const navRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    const nav = navRef.current;
-
-    if (!wrapper || !nav) return;
-
-    function handleScroll() {
-      const height = wrapper?.scrollTop;
-      const navHeight = nav?.scrollHeight;
-      if(!height || !navHeight) return
-      if (height > navHeight + 200) {
-        setIsFixed(true);
-      } else {
-        setIsFixed(false);
-      }
-    }
-
-    wrapper.addEventListener("scroll", handleScroll);
-    return () => wrapper.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     pageDetector(null, 1, false);
@@ -89,12 +67,12 @@ function Subjects() {
       ) : (
         <div
           ref={wrapperRef}
-          className={`${s.subjectsWrapper} ${isFixed ? s.paddingTop : s.paddingZero}`}
+          className={`${s.subjectsWrapper}`}
         >
           <header
             ref={navRef}
             id="SubjectNavigation"
-            className={`${s.top} ${isFixed ? s.fixedNav : s.stickyNav}`}
+            className={`${s.top}`}
           >
             <h1>Subjects</h1>
             <div className={s.dropDownButton} onClick={() => setShowChoices((prev) => !prev)}>

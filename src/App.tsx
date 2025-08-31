@@ -65,7 +65,6 @@ function App() {
   // Reusable Function or Component
 
   function pageDetector(authInd: number | null, tabInd: number | null, bool: boolean) {
-    console.log(bool, tabInd, authInd)
     setAuthTabs((arr: AuthTab[]) => arr.map((tab, i) => {
       if (i === authInd && authInd != null) {
         navigation(tab.path)
@@ -204,17 +203,34 @@ function App() {
         !userProjects.some(u => u.id === proj.id)
       );
 
+      // ✅ Find REMOVED items (exist in Personal but not in Main)
+      const removedActivities = userActivities.filter(u =>
+        !mainActivities.some(act => act.id === u.id)
+      );
+      const removedAssignments = userAssignments.filter(u =>
+        !mainAssignments.some(ass => ass.id === u.id)
+      );
+      const removedProjects = userProjects.filter(u =>
+        !mainProjects.some(proj => proj.id === u.id)
+      );
 
+      console.log("❌ Removed Items From the Main Database", { removedActivities, removedAssignments, removedProjects });
+      // Compare removed activities to the existing activities in the personal data
+      const filterRemovedActs = mainActivities.filter(orig => !removedActivities.some(act => orig.id == act.id))
+      const filterRemovedAss = mainAssignments.filter(orig => !removedAssignments.some(act => orig.id == act.id))
+      const filterRemovedProj = mainProjects.filter(orig => !removedProjects.some(act => orig.id == act.id))
+
+      console.log("❌ Serialized User's Activities", { filterRemovedActs, filterRemovedAss, filterRemovedProj });
       await updateDoc(personalDatabase, {
-        activities: [...newActivities, ...userActivities],
-        assignments: [...newAssignments, ...userAssignments],
-        petas: [...newProjects, ...userProjects]
+        activities: removedActivities.length != 0 ? filterRemovedActs : [...newActivities, ...userActivities],
+        assignments: removedAssignments.length != 0 ? filterRemovedAss : [...newAssignments, ...userAssignments],
+        petas: removedProjects.length != 0 ? filterRemovedProj : [...newProjects, ...userProjects]
       })
       return setUserData({
         ...origData,
-        activities: [...newActivities, ...userActivities],
-        assignments: [...newAssignments, ...userAssignments],
-        petas: [...newProjects, ...userProjects],
+        activities: removedActivities.length != 0 ? filterRemovedActs : [...newActivities, ...userActivities],
+        assignments: removedAssignments.length != 0 ? filterRemovedAss : [...newAssignments, ...userAssignments],
+        petas: removedProjects.length != 0 ? filterRemovedProj : [...newProjects, ...userProjects],
       });
     });
 
@@ -244,9 +260,10 @@ function App() {
 
       if (!userData) {
         getDoc(docRef).then((promise: any) => {
-          if (promise.data()?.firstName == "") {
+          if (promise.data()?.firstName == "" || promise.data()?.middleInitial == "" || promise.data()?.lastName == "") {
             navigation("/register")
           }
+          handleUser(user)
           setUserData(promise.data())
         })
       }

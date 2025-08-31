@@ -13,6 +13,7 @@
     cursor: pointer;
     font-family: var(--font);
     text-align: left;
+    text-transform: capitalize;
 }
 
 .subjectBox i {
@@ -45,14 +46,17 @@
     /* Show when active */
 }
 
-.subject {
+.subject,
+.status {
     padding: 10px;
     cursor: pointer;
     font-family: var(--font);
     text-align: left;
+    text-transform: capitalize;
 }
 
-.subject:hover {
+.subject:hover,
+.status:hover {
     background-color: #f0f0f0;
     /* Lighten background on hover */
 }

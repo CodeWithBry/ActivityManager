@@ -5,9 +5,17 @@ import { SubjectContentContext } from "../SubjectContent"
 
 
 export default function Hamburger() {
-    const {setSortingType} = useContext(SubjectContentContext) as SubConContextType
+    const { setSortingType } = useContext(SubjectContentContext) as SubConContextType
     const [showMenu, setShowMenu] = useState<boolean>(false)
     const [menuChoices, setMenuChoices] = useState<MenuChoices[]>([
+        {
+            classname: "fa fa-ellipsis-h",
+            functionName: "Pending"
+        },
+        {
+            classname: "fa fa-check",
+            functionName: "Completed"
+        },
         {
             classname: "fa fa-sort-numeric-asc",
             functionName: "Newest-Oldest"
@@ -25,32 +33,37 @@ export default function Hamburger() {
             functionName: "Z-A"
         }
     ])
-    const [selectedMenu, setSelectedMenu] = useState<MenuChoices| null>({
-            classname: "fa fa-sort-alpha-asc",
-            functionName: "A-Z"
-        })
+    const [selectedMenu, setSelectedMenu] = useState<MenuChoices | null>({
+        classname: "fa fa-sort-alpha-asc",
+        functionName: "A-Z"
+    })
 
-    useEffect(()=>{
-        if(selectedMenu) setSortingType(selectedMenu?.functionName)
+    useEffect(() => {
+        if (selectedMenu) {
+            console.log(selectedMenu.functionName)
+            setSortingType(selectedMenu?.functionName)
+        }
     }, [selectedMenu])
 
     return (
-        <button 
-            className={s.hamWrapper} 
-            onClick={()=>{showMenu ? setShowMenu(false) : setShowMenu(true)}}>
+        <button
+            className={s.hamWrapper}
+            onClick={() => { showMenu ? setShowMenu(false) : setShowMenu(true) }}>
             <p>
-                Sort 
-                 <i className={selectedMenu?.classname}></i>
-                 <i className={showMenu ? 'fa fa-angle-up' : 'fa fa-angle-down'}></i>
+                Sort
+                <i className={selectedMenu?.classname}></i>
+                <i className={showMenu ? 'fa fa-angle-up' : 'fa fa-angle-down'}></i>
             </p>
             <ul className={showMenu ? s.dropDownMenus : s.hideDropDown}>
                 {
-                    menuChoices.map((choice)=>{
-                        return <li 
+                    menuChoices.map((choice) => {
+                        return <li
                             key={choice.functionName}
-                            onClick={()=>{
+                            onClick={() => {
                                 setMenuChoices(prev => prev.map((obj) => {
-                                    if(choice.classname == obj.classname) setSelectedMenu(obj)
+                                    if (choice.functionName == obj.functionName) {
+                                        setSelectedMenu(obj)
+                                    }
                                     return obj
                                 }))
                             }} >

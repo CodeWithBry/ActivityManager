@@ -63,7 +63,7 @@ function SubjectContent({ params, subjects }: Props) {
     Assignment: false,
     Project: false
   })
-  const [sortingType, setSortingType] = useState<string>("A-Z")
+  const [sortingType, setSortingType] = useState<string>("Pending")
 
   function handleRightClick(e: MouseEvent<HTMLDivElement>, task: SchoolActivities | null, contextMenu: boolean) {
     if (contextMenu) { e.preventDefault() }
@@ -84,8 +84,10 @@ function SubjectContent({ params, subjects }: Props) {
             prev?.activities.map((origAct) => {
               activities?.map((act) => {
                 if (origAct.id == act.id) {
-                  if (act.isSelected || actDesc?.id == act.id) origAct.status = status
-                  setActDesc(setToNull ? null : act)
+                  if (act.isSelected || actDesc?.id == act.id) {
+                    origAct.status = status
+                    setActDesc(setToNull ? null : act)
+                  }
                 }
               })
               return origAct
@@ -104,8 +106,10 @@ function SubjectContent({ params, subjects }: Props) {
             prev?.assignments.map((origAct) => {
               assignments?.map((act) => {
                 if (origAct.id == act.id) {
-                  if (act.isSelected || actDesc?.id == act.id) origAct.status = status
-                  setActDesc(setToNull ? null : act)
+                  if (act.isSelected || actDesc?.id == act.id) {
+                    origAct.status = status
+                    setActDesc(setToNull ? null : act)
+                  }
                 }
               })
               return origAct
@@ -124,8 +128,10 @@ function SubjectContent({ params, subjects }: Props) {
             prev?.petas.map((origAct) => {
               projects?.map((act) => {
                 if (origAct.id == act.id) {
-                  if (act.isSelected || actDesc?.id == act.id) origAct.status = status
-                  setActDesc(setToNull ? null : act)
+                  if (act.isSelected || actDesc?.id == act.id) {
+                    origAct.status = status
+                    setActDesc(setToNull ? null : act)
+                  }
                 }
               })
               return origAct
@@ -179,8 +185,6 @@ function SubjectContent({ params, subjects }: Props) {
   // ********* EFFECTS ***************
   useEffect(() => {
     if (userData?.activities != null || userData?.assignments != null || userData?.petas != null) {
-
-      console.log(userData)
       setActivities(userData.activities.filter(act => act.subject === params));
       setAssignments(userData.assignments.filter(act => act.subject === params));
       setProjects(userData.petas.filter(act => act.subject === params));

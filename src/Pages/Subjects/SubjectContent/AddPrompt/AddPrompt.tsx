@@ -8,6 +8,7 @@ import { FirebaseError } from "firebase/app"
 import SubjectChoices from "./Components/SubjectChoices"
 import QuarterAndSemChoices from "./Components/QuarterAndSemChoices"
 import { SubjectContentContext } from "../SubjectContent"
+import StatusChoices from "./Components/StatusChoices"
 
 
 export default function AddPrompt() {
@@ -18,6 +19,7 @@ export default function AddPrompt() {
     const [actDesc, setActDesc] = useState<string>("")
     const [dueDate, setDueDate] = useState<string | null>(null)
     const [subject, setSubject] = useState<string>(params?.toUpperCase())
+    const [status, setStatus] = useState<"completed" | "pending">("pending")
 
 
     async function saveToMainDB() {
@@ -27,7 +29,7 @@ export default function AddPrompt() {
             title: actTitle,
             description: actDesc,
             typeOfWork: typeOfWork,
-            status: "pending",
+            status: status,
             createdBy: "Pajarillaga, Bryan",
             createdAt: `${date?.getFullYear()}-${date?.getMonth()}-${date?.getDate()}`,
             dueDate: dueDate,
@@ -73,6 +75,7 @@ export default function AddPrompt() {
                 <div className={s.top}>
                     <SubjectChoices subject={subject} setSubject={setSubject}/>
                     <QuarterAndSemChoices />
+                    <StatusChoices status={status} setStatus={setStatus} />
                     <h2 className={s.deadline}>Deadline: </h2>
                     <input
                         type="date"

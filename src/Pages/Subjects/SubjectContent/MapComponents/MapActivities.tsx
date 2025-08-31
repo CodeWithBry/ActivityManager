@@ -28,6 +28,10 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
             sortedActivities.sort((a, b) =>
                 (b.title || "").localeCompare(a.title || "")
             );
+        } else if (sortingType == "Pending") {
+            sortedActivities = sortedActivities.filter(act => act.status == "pending")
+        } else if (sortingType == "Completed") {
+            sortedActivities = sortedActivities.filter(act => act.status == "completed")
         }
 
         sortedActivities = sortedActivities.filter(act => act.quarter == selectedChoice.quarter)
@@ -51,7 +55,7 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
             </>
         );
 
-        
+
         return <h2 className={s.noActivities}>There are no Activites!</h2>
     }
 
@@ -70,6 +74,10 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
             sortedAssignments.sort((a, b) =>
                 (b.title).localeCompare(a.title)
             );
+        } else if (sortingType == "Pending") {
+            sortedAssignments = sortedAssignments.filter(act => act.status == "pending")
+        } else if (sortingType == "Completed") {
+            sortedAssignments = sortedAssignments.filter(act => act.status == "completed")
         }
 
         sortedAssignments = sortedAssignments.filter(act => act.quarter == selectedChoice.quarter)
@@ -89,11 +97,12 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
                             handleRightClick={handleRightClick}
                             setActDesc={setActDesc}
                         />
-                    )})}
+                        )
+                    })}
             </>
         );
 
-        
+
         return <h2 className={s.noActivities}>There are no Assignments!</h2>
     }
 
@@ -112,6 +121,10 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
             sortedProjects.sort((a, b) =>
                 (b.title || "").localeCompare(a.title || "")
             );
+        } else if (sortingType == "Pending") {
+            sortedProjects = sortedProjects.filter(act => act.status == "pending")
+        } else if (sortingType == "Completed") {
+            sortedProjects = sortedProjects.filter(act => act.status == "completed")
         }
 
         sortedProjects = sortedProjects.filter(act => act.quarter == selectedChoice.quarter)

@@ -61,8 +61,8 @@ function ActivityDescription() {
                             className={s.hideButton}>X</button>
                     </div>
                 </h2>
+                <h3>{actDesc?.title}</h3>
                 <p>{actDesc?.description}</p>
-
             </div>
         </div>
     </>

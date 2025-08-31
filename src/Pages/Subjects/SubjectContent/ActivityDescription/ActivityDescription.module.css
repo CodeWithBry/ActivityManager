@@ -16,7 +16,6 @@
     display: none;
 }
 
-
 .showActDesc .showActDescBox {
     opacity: 1;
     display: flex;
@@ -33,7 +32,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .showActDescBox>h2 .right {
@@ -51,7 +49,8 @@
     display: none;
 }
 
-.stateWrapper .choices, .stateWrapper .hideChoices {
+.stateWrapper .choices,
+.stateWrapper .hideChoices {
     display: flex;
     gap: .5rem;
 }
@@ -60,9 +59,8 @@
     position: relative;
 }
 
-
 .showActDescBox>h2 .right>button,
-.stateWrapper > div>button,
+.stateWrapper>div>button,
 .stateWrapper>button {
     border: none;
     padding: .5rem .75rem;
@@ -70,12 +68,12 @@
     border-radius: .3rem;
 }
 
-.stateWrapper > div .highlight {
+.stateWrapper>div .highlight {
     background-color: #0ec00e;
     color: white;
 }
 
-.stateWrapper > div .highlight:nth-of-type(2) {
+.stateWrapper>div .highlight:nth-of-type(2) {
     background-color: rgb(192, 136, 14);
     color: rgb(220, 219, 219);
 }
@@ -91,7 +89,11 @@
     color: white;
 }
 
-.showActDescBox > p {
+.showActDescBox>h3 {
+    margin: .5rem;
+}
+
+.showActDescBox>p {
     margin: .75rem;
 }
 
@@ -109,11 +111,9 @@
         overflow: hidden;
         overflow-y: auto;
     }
-
     .stateWrapper .showButton {
         display: block;
     }
-
     .stateWrapper .choices {
         display: flex;
         flex-direction: column;
@@ -126,8 +126,6 @@
         padding: .5rem;
         box-shadow: 0 5px 10px -5px black;
     }
-
-
     .stateWrapper .hideChoices {
         display: none;
     }

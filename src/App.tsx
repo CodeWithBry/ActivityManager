@@ -292,7 +292,8 @@ function App() {
     // Functions
     pageDetector,
     signInWithFacebook,
-    signInWithGoogle
+    signInWithGoogle,
+    handleUser
   }
 
   return (

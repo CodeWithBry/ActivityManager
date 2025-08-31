@@ -113,8 +113,8 @@ export interface ContextType {
     tabInd: number | null,
     bool: boolean) => void;
   signInWithFacebook: () => void,
-
-  signInWithGoogle: () => void
+  signInWithGoogle: () => void,
+  handleUser: (user: User) => void
 }
 
 export interface SubConContextType {

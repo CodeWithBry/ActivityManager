@@ -9,7 +9,7 @@ import { FirebaseError } from "firebase/app";
 
 
 function LogIn() {
-    const { pageDetector, signInWithFacebook, signInWithGoogle, setErrorDescription, userObject, userData, setBasicInfo } = useContext(context) as ContextType
+    const { pageDetector, signInWithFacebook, signInWithGoogle, setErrorDescription, userObject, userData, setBasicInfo, handleUser } = useContext(context) as ContextType
 
     // NAVIGATION
     const navigation = useNavigate()
@@ -31,6 +31,7 @@ function LogIn() {
         if (valid) {
             try {
                 await signInWithEmailAndPassword(auth, email, password)
+                if(auth && auth.currentUser) handleUser(auth.currentUser)
                 window.location.reload()
             } catch (error) {
                 if (error instanceof FirebaseError) {

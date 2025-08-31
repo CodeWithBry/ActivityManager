@@ -4,10 +4,9 @@ import { useContext, useEffect, useRef, useState } from "react"
 import type { ContextType } from "../../Interfaces/interface";
 import { Link, useNavigate } from "react-router-dom";
 import NameInputBox from "./NameInputBox/NameInputBox";
-import { auth, firestore } from "../../Firebase/Firebase";
+import { auth } from "../../Firebase/Firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import { doc, setDoc } from "firebase/firestore";
 
 
 function SignUp() {
@@ -40,17 +39,9 @@ function SignUp() {
 
     async function createAccount() {
         const valid: boolean = checkInputs()
-        const user = {
-            email: email,
-            password: password,
-            firstName: firstName,
-            middleInitial: middleInitial,
-            lastName: lastName
-        }
         if (valid) {
             try {
                 await createUserWithEmailAndPassword(auth, email, password)
-                const docRef = doc(firestore, `McCarthy`, `${auth?.currentUser?.uid}`)
                 setBasicInfo(true)
                 window.location.reload()
             } catch (e) {

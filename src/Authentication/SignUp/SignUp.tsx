@@ -51,17 +51,6 @@ function SignUp() {
             try {
                 await createUserWithEmailAndPassword(auth, email, password)
                 const docRef = doc(firestore, `McCarthy`, `${auth?.currentUser?.uid}`)
-                await setDoc(docRef, {
-                    user: user,
-                    activities: [],
-                    assignments: [],
-                    petas: [],
-                    reviewers: []
-                })
-                const userListRef = doc(firestore, "Main_Database", "Users")
-                await setDoc(userListRef, {
-                    userList: user
-                })
                 setBasicInfo(true)
                 window.location.reload()
             } catch (e) {

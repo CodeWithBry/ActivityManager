@@ -70,7 +70,6 @@ function SubjectContent({ params, subjects }: Props) {
     setShowMenu(true)
     setMenuPos({ x: e.clientX, y: e.clientY })
     if (task) {
-      console.log(contextMenu)
       setTypeOfWork(task.typeOfWork)
       setActDesc(task)
     }

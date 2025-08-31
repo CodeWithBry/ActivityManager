@@ -40,7 +40,6 @@ export default function Hamburger() {
 
     useEffect(() => {
         if (selectedMenu) {
-            console.log(selectedMenu.functionName)
             setSortingType(selectedMenu?.functionName)
         }
     }, [selectedMenu])

@@ -35,7 +35,6 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
         }
 
         sortedActivities = sortedActivities.filter(act => act.quarter == selectedChoice.quarter)
-        console.log(sortedActivities)
         if (sortedActivities.length != 0) return (
             <>
                 {sortedActivities

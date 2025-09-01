@@ -12,6 +12,7 @@ import MapActivities from "./MapComponents/MapActivities";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../../Firebase/Firebase";
 import { SubjectsContext } from "../Subjects";
+import EditPrompt from "./EditPrompt/EditPrompt";
 
 export const SubjectContentContext = createContext({})
 
@@ -44,6 +45,7 @@ function SubjectContent({ params, subjects }: Props) {
   const [showAddPrompt, setShowAddPrompt] = useState<boolean>(false)
   const [canSelect, setCanSelect] = useState<boolean>(false)
   const [showSimplifyMenus, setShowSimplifyMenus] = useState<boolean>(false)
+  const [showEdit, setShowEdit] = useState<boolean>(false)
 
   const [typeOfWork, setTypeOfWork] = useState<string>("")
   const [quarter, setQuarter] = useState<string>("2nd")
@@ -75,22 +77,27 @@ function SubjectContent({ params, subjects }: Props) {
     }
   }
 
-  function defineTypeOfWork(setToNull: boolean, status: "pending" | "completed") {
+  function defineTypeOfWork(setToNull: boolean, status: "pending" | "completed", task?: SchoolActivities) {
     switch (typeOfWork) {
       case "Activity":
         setUserData(prev => {
           if (prev) {
             prev?.activities.map((origAct) => {
               activities?.map((act) => {
-                if (origAct.id == act.id) {
+                if (origAct.id == act.id && task == null) {
                   if (act.isSelected || actDesc?.id == act.id) {
                     origAct.status = status
                     setActDesc(setToNull ? null : act)
                   }
+                } else if (task != null && task.id == origAct.id) {
+                  origAct = {...task}
+                  setActDesc(setToNull ? null : act)
                 }
               })
               return origAct
             })
+
+            console.log(prev.activities)
             saveToDatabase(prev.activities, "activities")
             setSelectAll(prev => ({ ...prev, Activity: false }))
             return prev
@@ -104,11 +111,14 @@ function SubjectContent({ params, subjects }: Props) {
           if (prev) {
             prev?.assignments.map((origAct) => {
               assignments?.map((act) => {
-                if (origAct.id == act.id) {
+                if (origAct.id == act.id && task == null) {
                   if (act.isSelected || actDesc?.id == act.id) {
                     origAct.status = status
                     setActDesc(setToNull ? null : act)
                   }
+                } else if (task != null && task.id == origAct.id) {
+                  origAct = task
+                  setActDesc(setToNull ? null : act)
                 }
               })
               return origAct
@@ -126,11 +136,14 @@ function SubjectContent({ params, subjects }: Props) {
           if (prev) {
             prev?.petas.map((origAct) => {
               projects?.map((act) => {
-                if (origAct.id == act.id) {
+                if (origAct.id == act.id && task == null) {
                   if (act.isSelected || actDesc?.id == act.id) {
                     origAct.status = status
                     setActDesc(setToNull ? null : act)
                   }
+                } else if (task != null && task.id == origAct.id) {
+                  origAct = task
+                  setActDesc(setToNull ? null : act)
                 }
               })
               return origAct
@@ -258,6 +271,7 @@ function SubjectContent({ params, subjects }: Props) {
     showMenu, setShowMenu,
     showActDesc,
     showAddPrompt, setShowAddPrompt,
+    showEdit, setShowEdit,
 
     typeOfWork, setTypeOfWork,
 
@@ -281,6 +295,7 @@ function SubjectContent({ params, subjects }: Props) {
     defineTypeOfWork,
     handleRightClick,
     handleSelectAll,
+    saveToDatabase,
     // REF
     menu
   }
@@ -294,6 +309,7 @@ function SubjectContent({ params, subjects }: Props) {
         <MenuBox task={actDesc} />
         <ActivityDescription />
         <AddPrompt />
+        <EditPrompt />
         <div className={s.topComponent}>
           <Link to={"/subjects"} id={s.backButt}>Back</Link>
           <h1>{subjects.map((sub) => { return sub.subjectNameAbbreviation.toLowerCase() == params.toLowerCase() ? sub.subjectNameAbbreviation : "" })}</h1>

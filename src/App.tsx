@@ -5,7 +5,7 @@ import s from "./App.module.css"
 const Home = lazy(() => import('./Pages/Home/Home'));
 const Subjects = lazy(() => import('./Pages/Subjects/Subjects'));
 const Recap = lazy(() => import('./Pages/Recap/Recap.tsx'));
-const Account = lazy(() => import('./Pages/Account/Account'))
+const Account = lazy(() => import('./Pages/Users/Account.tsx'))
 
 import Navbar from './Components/Navbar/Navbar';
 import Sidebar from './Components/Sidebar/Sidebar';

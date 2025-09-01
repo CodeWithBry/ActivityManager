@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import s from "./Components.module.css"
 import { SubjectContentContext } from "../SubjectContent";
-import type { SchoolActivities, SubConContextType } from "../../../../Interfaces/interface";
+import type { ContextType, SchoolActivities, SubConContextType } from "../../../../Interfaces/interface";
+import { context } from "../../../../App";
 
 interface Props {
     task: SchoolActivities | null;
@@ -15,7 +16,8 @@ function MenuBox({ task }: Props) {
         menuPos, canSelect,
         handleRightClick, setActivities,
         setAssignments, setProjects,
-        handleSelectAll } = useContext(SubjectContentContext) as SubConContextType
+        handleSelectAll, setShowEdit } = useContext(SubjectContentContext) as SubConContextType
+    const { userData } = useContext(context) as ContextType
 
     function handleCheck(bool: boolean) {
         if (canSelect) {
@@ -65,6 +67,9 @@ function MenuBox({ task }: Props) {
             case 5:
                 task?.isSelected ? handleCheck(false) : handleCheck(true)
                 break;
+            case 6:
+                setShowEdit(true)
+                break;
         }
     }
 
@@ -75,6 +80,16 @@ function MenuBox({ task }: Props) {
                 <i className="fa fa-hand-o-up"></i>
                 {actDesc?.isSelected ? "Unselect" : "Select"}
             </button>
+    }
+
+    function EditButton() {
+        if (userData?.user.status == "Owner") {
+            return <button
+                onClick={() => handleClick(6)}>
+                <i className="	fa fa-edit"></i>
+                Edit
+            </button>
+        }
     }
 
     return <div
@@ -91,6 +106,7 @@ function MenuBox({ task }: Props) {
             <i className="fa fa-envelope-open"></i>
             Open
         </button>
+        <EditButton />
         <button
             onClick={() => handleClick(2)}>
             <i className={canSelect ? "fa fa-close" : "fa fa-hand-o-up"}></i>

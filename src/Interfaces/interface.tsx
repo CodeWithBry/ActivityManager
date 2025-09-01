@@ -45,7 +45,7 @@ export interface UserInfo {
   status: string;
 }
 export interface SchoolActivities {
-  id: string;
+  id: string | number;
   subject: string;
   title: string;
   description: string;
@@ -89,21 +89,21 @@ export interface MenuChoices {
 
 export interface ContextType {
   userObject: User | null,
-  setUserObject: React.Dispatch<React.SetStateAction<User | null>>,
-  userData: UserData | null, setUserData: React.Dispatch<React.SetStateAction<UserData | null>>,
+  setUserObject: Dispatch<SetStateAction<User | null>>,
+  userData: UserData | null, setUserData: Dispatch<SetStateAction<UserData | null>>,
 
   // Boolean
-  showSideBar: boolean, setShowSideBar: React.Dispatch<React.SetStateAction<boolean>>,
-  showLogForm: boolean, setShowLogForm: React.Dispatch<React.SetStateAction<boolean>>,
-  showLogOutPrompt: boolean, setShowLogOutPrompt: React.Dispatch<React.SetStateAction<boolean>>,
-  basicInfo: boolean, setBasicInfo: React.Dispatch<React.SetStateAction<boolean>>,
+  showSideBar: boolean, setShowSideBar: Dispatch<SetStateAction<boolean>>,
+  showLogForm: boolean, setShowLogForm: Dispatch<SetStateAction<boolean>>,
+  showLogOutPrompt: boolean, setShowLogOutPrompt: Dispatch<SetStateAction<boolean>>,
+  basicInfo: boolean, setBasicInfo: Dispatch<SetStateAction<boolean>>,
 
   // String and Numbers
-  pathTo: string, setPathTo: React.Dispatch<React.SetStateAction<string>>,
-  errorDescription: string, setErrorDescription: React.Dispatch<React.SetStateAction<string>>,
+  pathTo: string, setPathTo: Dispatch<SetStateAction<string>>,
+  errorDescription: string, setErrorDescription: Dispatch<SetStateAction<string>>,
 
   // Objects and Arrays
-  tabs: Tab[], setTabs: React.Dispatch<React.SetStateAction<Tab[]>>,
+  tabs: Tab[], setTabs: Dispatch<SetStateAction<Tab[]>>,
 
 
 
@@ -123,10 +123,11 @@ export interface SubConContextType {
   actDesc: SchoolActivities | null,
   showActDesc: boolean,
   showAddPrompt: boolean, setShowAddPrompt: Dispatch<SetStateAction<boolean>>,
-  setShowActDesc: React.Dispatch<React.SetStateAction<boolean>>,
+  setShowActDesc: Dispatch<SetStateAction<boolean>>,
+  showEdit: boolean, setShowEdit: Dispatch<SetStateAction<boolean>>,
 
   selectedChoice: Quarter, setSelectedChoice: Dispatch<SetStateAction<Quarter>>,
-  setActDesc: React.Dispatch<React.SetStateAction<SchoolActivities | null>>,
+  setActDesc: Dispatch<SetStateAction<SchoolActivities | null>>,
   activities: SchoolActivities[] | null, setActivities: Dispatch<SetStateAction<SchoolActivities[] | null>>,
   assignments: SchoolActivities[] | null, setAssignments: Dispatch<SetStateAction<SchoolActivities[] | null>>,
   projects: SchoolActivities[] | null, setProjects: Dispatch<SetStateAction<SchoolActivities[] | null>>,
@@ -135,16 +136,17 @@ export interface SubConContextType {
   // NUMBERS
   menuPos: MenuPosition, setMenuPos: Dispatch<SetStateAction<MenuPosition>>
 
-  typeOfWork: string, setTypeOfWork: React.Dispatch<React.SetStateAction<string>>,
-  quarter: string, setQuarter: React.Dispatch<React.SetStateAction<string>>,
-  semester: string, setSemester: React.Dispatch<React.SetStateAction<string>>,
+  typeOfWork: string, setTypeOfWork: Dispatch<SetStateAction<string>>,
+  quarter: string, setQuarter: Dispatch<SetStateAction<string>>,
+  semester: string, setSemester: Dispatch<SetStateAction<string>>,
   params: string,
   sortingType: string, setSortingType: Dispatch<SetStateAction<string>>
 
   // Functions
-  defineTypeOfWork: (setToNull: boolean, status: "pending" | "completed") => void,
+  defineTypeOfWork: (setToNull: boolean, status: "pending" | "completed", task?: SchoolActivities) => void,
   handleRightClick: (e: any, task: SchoolActivities | null, contextMenu: boolean) => void,
   handleSelectAll: (typeOfWorkArgs: string, bool: boolean) => void,
+  saveToDatabase: (val: SchoolActivities[], typeOfWork: string)=>void
 
   // REF
   menu: RefObject<HTMLDivElement | null>

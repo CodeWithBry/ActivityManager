@@ -57,7 +57,7 @@ export default function EditPrompt() {
                         [typeOfWork]: Assignment
                     })
                     break;
-                case "Projects":
+                case "Project":
                     const Projects = getData.Project as SchoolActivities[]
                     const Project = Projects.map(act => (act.id == id ? {...activity, id: Math.random() * 1} : {...act})) 
                     await updateDoc(mainDB, {
@@ -88,7 +88,7 @@ export default function EditPrompt() {
         <div className={s.addSubjectWrapper}>
             <div className={s.addSubjectBox}>
                 <button className={s.closeButton} onClick={() => { setTypeOfWork(""), setShowEdit(false) }}>X</button>
-                <h1>Create {typeOfWork}</h1>
+                <h1>Edit {typeOfWork}</h1>
                 <div className={s.top}>
                     <SubjectChoices subject={subject} setSubject={setSubject} />
                     <QuarterAndSemChoices />

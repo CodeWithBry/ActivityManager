@@ -1,0 +1,98 @@
+.dayCard {
+    width: 340px;
+    height: 500px;
+    background: var(--sixty-percent);
+    border-radius: 12px;
+    box-shadow: -10px 10px 0px 0px var(--thirty-percent), -5px 5px 0px 0px var(--thirty-percent), var(--drop-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: all .3s ease;
+}
+
+.dayCard:hover {
+    scale: 1.05;
+}
+
+.dayHeader,
+.openDay {
+    background: var(--thirty-percent);
+    font-family: var(--font-title);
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 10px;
+    border: none;
+    transition: all .3s ease;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Adjust thumb color */
+        border-radius: 10px;
+        /* Adjust border radius */
+        border: 3px solid #f1f1f1;
+    }
+}
+
+.dayContent {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-weight: 600;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    text-wrap: nowrap;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Adjust thumb color */
+        border-radius: 10px;
+        /* Adjust border radius */
+        border: 3px solid #f1f1f1;
+    }
+}
+
+.dayContent .activities {
+    display: flex;
+    flex-direction: column;
+}
+
+.activities>h2 {
+    font-family: var(--font-title);
+    color: var(--thirty-percent);
+}
+
+.activities .actWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    margin-left: .5rem;
+    font-size: clamp(.5rem, 2.5vw, 1rem);
+    color: var(--ten-percent);
+}
+
+.activities .actWrapper>li {
+    text-wrap: wrap;
+    font-weight: bold;
+    font-family: var(--font);
+}
+
+.openDay:hover {
+    background-color: var(--ten-percent);
+}
+
+@media (max-width: 768px) and (max-height: 900px) {
+    .dayCard {
+        width: 270px;
+        height: 400px;
+    }
+}

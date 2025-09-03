@@ -50,7 +50,7 @@ function App() {
   const [tabs, setTabs] = useState<Tab[]>([
     { pageName: "Home", path: "/", element: <Home />, keyId: Math.random() * 1, icon: "fa fa-home", focus: true },
     { pageName: "Subjects", path: `/subjects`, element: <Subjects />, keyId: Math.random() * 1, icon: "fa fa-book", focus: false },
-    { pageName: "Recap", path: "/Recap", element: <Recap />, keyId: Math.random() * 1, icon: "	fa fa-check-square-o", focus: false },
+    { pageName: "Recap", path: "/Recap", element: <Recap />, keyId: Math.random() * 1, icon: "fa fa-calendar", focus: false },
     { pageName: "Account", path: "/account", element: <Account />, keyId: Math.random() * 1, icon: "	fa fa-user", focus: false },
   ])
 

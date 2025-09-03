@@ -117,6 +117,40 @@ export interface ContextType {
   handleUser: (user: User) => void
 }
 
+// Recap Variables
+
+export interface Weeks {
+  monthAndDay?: string;
+}
+
+export interface WeeklyActivities {
+  id: string | number;
+  status: string;
+  title: string;
+  description: string;
+  typeOfWork: string;
+  subject: string; 
+}
+
+export interface Day {
+  day: string;
+  Activities: WeeklyActivities[];
+  Groupings: WeeklyActivities[];
+  Assignment: WeeklyActivities[];
+  Projects: WeeklyActivities[];
+  Exams: WeeklyActivities[]
+}
+
+export interface WeekList {
+  isCurrent: false;
+  monthAndDay: string;
+}
+
+export interface WeeklyRecap {
+  monthAndDay: string;
+  days: Day[];
+}
+
 export interface SubConContextType {
   canSelect: boolean, setCanSelect: Dispatch<SetStateAction<boolean>>,
   showMenu: boolean, setShowMenu: Dispatch<SetStateAction<boolean>>,
@@ -146,7 +180,7 @@ export interface SubConContextType {
   defineTypeOfWork: (setToNull: boolean, status: "pending" | "completed", task?: SchoolActivities) => void,
   handleRightClick: (e: any, task: SchoolActivities | null, contextMenu: boolean) => void,
   handleSelectAll: (typeOfWorkArgs: string, bool: boolean) => void,
-  saveToDatabase: (val: SchoolActivities[], typeOfWork: string)=>void
+  saveToDatabase: (val: SchoolActivities[], typeOfWork: string) => void
 
   // REF
   menu: RefObject<HTMLDivElement | null>
@@ -155,4 +189,18 @@ export interface SubConContextType {
 export interface SubjectContext {
   selectedQuarter: string, setSelectedQuarter: Dispatch<SetStateAction<string>>,
   selectedSemester: string, setSelectedSemester: Dispatch<SetStateAction<string>>
+}
+
+export interface AddRecapContextType {
+  showActPrompt: boolean, setShowActPrompt: Dispatch<SetStateAction<boolean>>,
+  showAssPrompt: boolean, setShowAssPrompt: Dispatch<SetStateAction<boolean>>,
+  showProjPrompt: boolean, setShowProjPrompt: Dispatch<SetStateAction<boolean>>,
+
+  selectedDay: string, setSelectedDay: Dispatch<SetStateAction<string>>
+  typeOfWork: string, setTypeOfWork: Dispatch<SetStateAction<string>>,
+  quarter: string, setQuarter: Dispatch<SetStateAction<string>>,
+  semester: string, setSemester: Dispatch<SetStateAction<string>>,
+  subject: string, setSubject: Dispatch<SetStateAction<string>>,
+
+  recap: WeeklyRecap, setRecap: Dispatch<SetStateAction<WeeklyRecap>>
 }

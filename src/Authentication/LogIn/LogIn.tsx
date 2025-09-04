@@ -31,8 +31,7 @@ function LogIn() {
         if (valid) {
             try {
                 await signInWithEmailAndPassword(auth, email, password)
-                if(auth && auth.currentUser) handleUser(auth.currentUser)
-                window.location.reload()
+                if (auth && auth.currentUser) handleUser(auth.currentUser)
             } catch (error) {
                 if (error instanceof FirebaseError) {
                     if (error.code == "auth/invalid-credential") setErrorDescription("Email or Password is Not Correct")

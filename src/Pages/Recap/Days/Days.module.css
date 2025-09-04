@@ -75,6 +75,7 @@
     flex-direction: column;
     width: 100%;
     height: fit-content;
+    gap: .5rem;
     margin-left: .5rem;
     font-size: clamp(.5rem, 2.5vw, 1rem);
     color: var(--ten-percent);
@@ -82,8 +83,12 @@
 
 .activities .actWrapper>li {
     text-wrap: wrap;
-    font-weight: bold;
     font-family: var(--font);
+}
+
+.activities .actWrapper>li>span {
+    font-weight: bolder;
+    text-decoration: underline;
 }
 
 .openDay:hover {

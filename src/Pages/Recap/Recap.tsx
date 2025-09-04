@@ -10,10 +10,12 @@ import { context } from "../../App"
 
 function Recap() {
 
-  const {userData} = useContext(context) as ContextType
+  const { userData, pageDetector, userObject } = useContext(context) as ContextType
 
   const [showWeeks, setShowWeeks] = useState<boolean>(false)
   const [showAddRecap, setShowAddRecap] = useState<boolean>(false)
+  const [editRecap, setEditRecap] = useState<boolean>(false)
+
   const [weeklyRecaps, setWeeklyRecaps] = useState<WeeklyRecap | null>(null)
   const [selectedWeek, setSelectedWeek] = useState<Weeks>({})
   const [weeksChoices, setWeekChoices] = useState<Weeks[]>([])
@@ -51,6 +53,7 @@ function Recap() {
     const snap = onSnapshot(recapData, (snapshot) => {
       console.log("Render!")
       const getListsOfDate = snapshot.data()?.ListsOfRecap
+      if (!getListsOfDate) return
       setSelectedWeek(getListsOfDate[getListsOfDate.length - 1])
       async function getRecap() {
         setWeekChoices(getListsOfDate)
@@ -62,8 +65,8 @@ function Recap() {
         const getInstanceOf = getData[keyInstance as keyof typeof getData]
         setWeeklyRecaps(getInstanceOf)
       }
-
-      if (getListsOfDate.length != 0) getRecap()
+      console.log(getListsOfDate)
+      if (getListsOfDate.length != 0) setTimeout(() => getRecap(), 5000)
     })
 
 
@@ -72,9 +75,17 @@ function Recap() {
     }
   }, [])
 
+  useEffect(() => {
+    if (userObject?.uid) {
+      pageDetector(null, 2, false);
+    } else {
+      pageDetector(0, null, true);
+    }
+  }, [userObject]);
+
   return (
     <div className={s.recapWrapper}>
-      <AddRecap weeklyRecaps={weeklyRecaps} showAddRecap={showAddRecap} setShowAddRecap={setShowAddRecap} />
+      <AddRecap weeklyRecaps={weeklyRecaps} showAddRecap={showAddRecap} setShowAddRecap={setShowAddRecap} editRecap={editRecap} setEditRecap={setEditRecap} />
       <div className={s.top}>
         <h2>Weekly Recap</h2>
         <div className={s.weekWrapper}>
@@ -97,16 +108,24 @@ function Recap() {
               </li>
             ))}
           </ul>
-          {userData?.user.status == "Owner" && <button
-            className={s.createRecap}
-            onClick={() => setShowAddRecap(true)}>
-            Create Recap
-          </button>}
+          {userData?.user.status == "Owner" &&
+            <button
+              className={s.createRecap}
+              onClick={() => setShowAddRecap(true)}>
+              Create Recap
+            </button>}
+          {userData?.user.status == "Owner" &&
+            <button
+              className={s.createRecap}
+              onClick={() => setEditRecap(true)}>
+              <i className="fa fa-edit"></i>
+            </button>
+          }
         </div>
       </div>
       <div className={s.daysWrapper}>
         {
-          weeklyRecaps?.days.map(day => <Days day={day} />)
+          weeklyRecaps?.days.map(day => <Days key={Math.random() * 1} day={day} />)
         }
       </div>
     </div>

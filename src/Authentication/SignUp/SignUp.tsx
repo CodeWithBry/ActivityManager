@@ -43,7 +43,6 @@ function SignUp() {
             try {
                 await createUserWithEmailAndPassword(auth, email, password)
                 setBasicInfo(true)
-                window.location.reload()
             } catch (e) {
                 if (e instanceof FirebaseError) {
                     if (e.code.includes("(auth/invalid-email)") && emailRef.current)

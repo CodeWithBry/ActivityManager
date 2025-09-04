@@ -14,31 +14,52 @@ export default function Days({ day }: Props) {
           <div className={s.activities}>
             <h2>Activities</h2>
             <ul className={s.actWrapper}>
-              {day.Activities.map(act => <li key={act.id}> <i className='fa fa-caret-right'></i> {act.subject}: {act.title + act.status}</li>)}
+              {day.Activities.length != 0 ? 
+                day.Activities.map(act => 
+                  <li key={act.id}>
+                    <i className='fa fa-caret-right'></i> <span>{act.subject}</span>: {act.title + act.status}
+                  </li>) : 
+                <li>There are no Activity</li>}
             </ul>
           </div>
           <div className={s.activities}>
             <h2>Group Activity</h2>
             <ul className={s.actWrapper}>
-              {day.Groupings.map(act => <li key={act.id}> <i className='fa fa-caret-right'></i> {act.subject}: {act.title + act.status}</li>)}
+              {day.Groupings.length != 0 ? day.Groupings.map(act => 
+                <li key={act.id}>
+                  <i className='fa fa-caret-right'></i> <span>{act.subject}</span>: {act.title + act.status}
+                </li>) : 
+              <li>There are no Group Activity</li>}
             </ul>
           </div>
           <div className={s.activities}>
             <h2>Assignment</h2>
             <ul className={s.actWrapper}>
-              {day.Assignment.map(act => <li key={act.id}> <i className='fa fa-caret-right'></i> {act.subject}: {act.title + act.status}</li>)}
+              {day.Assignment.length != 0 ?  day.Assignment.map(act => 
+                <li key={act.id}>
+                  <i className='fa fa-caret-right'></i> <span>{act.subject}</span>: {act.title + act.status}
+                </li>) : 
+              <li>There are no Assignment</li>}
             </ul>
           </div>
           <div className={s.activities}>
             <h2>Projects</h2>
             <ul className={s.actWrapper}>
-              {day.Projects.map(act => <li key={act.id}> <i className='fa fa-caret-right'></i> {act.subject}: {act.title + act.status}</li>)}
+              {day.Projects.length != 0 ? day.Projects.map(act => 
+                <li key={act.id}>
+                  <i className='fa fa-caret-right'></i> <span>{act.subject}</span>: {act.title + act.status}
+                </li>) : 
+              <li>There are no Project</li>}
             </ul>
           </div>
           <div className={s.activities}>
             <h2>Exams</h2>
             <ul className={s.actWrapper}>
-              {day.Exams.map(act => <li key={act.id}> <i className='fa fa-caret-right'></i> {act.subject}: {act.title + act.status}</li>)}
+              {day.Exams.length != 0 ? day.Exams.map(act => 
+                <li key={act.id}>
+                  <i className='fa fa-caret-right'></i> <span>{act.subject}</span>: {act.title + act.status}
+                </li>) : 
+              <li>There are no Exam</li>}
             </ul>
           </div>
         </div>

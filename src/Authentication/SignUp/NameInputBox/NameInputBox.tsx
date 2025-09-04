@@ -21,21 +21,21 @@ interface Props {
   checkBasicInputs: () => boolean;
 }
 
-function NameInputBox({ basicInfo, firstName, 
+function NameInputBox({ basicInfo, firstName,
   setFirstName, middleInitial, setMiddleInitial,
   lastName, setLastName, firstnameRef,
   middleInitialRef, lastnameRef, checkBasicInputs }: Props) {
-    
-  const { setUserData, userData } = useContext(context) as ContextType 
+
+  const { setUserData, userData } = useContext(context) as ContextType
   const navigation = useNavigate()
 
   async function updateData() {
     try {
       const docRef = doc(firestore, "McCarthy", `${auth?.currentUser?.uid}`)
       setUserData((prev) => {
-        if(prev?.user != null) prev.user.firstName = firstName
-        if(prev?.user != null) prev.user.middleInitial = middleInitial
-        if(prev?.user != null) prev.user.lastName = lastName
+        if (prev?.user != null) prev.user.firstName = firstName
+        if (prev?.user != null) prev.user.middleInitial = middleInitial
+        if (prev?.user != null) prev.user.lastName = lastName
         return prev
       })
       await updateDoc(docRef, {
@@ -43,6 +43,7 @@ function NameInputBox({ basicInfo, firstName,
       })
 
       navigation("/")
+      window.location.reload()
     } catch (error) {
       console.log(error)
     }
@@ -102,9 +103,9 @@ function NameInputBox({ basicInfo, firstName,
             <span ref={lastnameRef} className={s.violation}></span>
             <div className={s.buttons}>
               <button
-                onClick={()=>{
+                onClick={() => {
                   const check = checkBasicInputs()
-                  if(check) updateData()
+                  if (check) updateData()
                 }}
                 id={s.logInButton}>
                 Confirm

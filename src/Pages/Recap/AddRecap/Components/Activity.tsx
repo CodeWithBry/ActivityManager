@@ -1,15 +1,13 @@
 import { useContext, useEffect, useState } from 'react'
 import s from './Activity.module.css'
 import { AddRecapContext } from '../AddRecap'
-import type { AddRecapContextType } from '../../../../Interfaces/interface'
+import type { AddRecapContextType, WeeklyActivities } from '../../../../Interfaces/interface'
 import SubjectChoices from './SubjectChoices'
 import QuarterAndSemChoices from './QuarterAndSemChoices'
 
 export default function Activity() {
     const { typeOfWork, setTypeOfWork,
         showActPrompt, setShowActPrompt,
-        showAssPrompt, setShowAssPrompt,
-        showProjPrompt, setShowProjPrompt,
         setRecap, recap,
         selectedDay } = useContext(AddRecapContext) as AddRecapContextType
     const [actTitle, setActTitle] = useState<string>("")
@@ -17,7 +15,7 @@ export default function Activity() {
     const [status, setStatus] = useState("(Submitted)")
     const [subject, setSubject] = useState<string>("CSS")
 
-    function handleCreate() {
+    function handleCreate(isCreateOnly: boolean) {
         const activity = {
             id: Math.random() * 1,
             status: status,
@@ -27,6 +25,16 @@ export default function Activity() {
             subject: subject
         }
 
+        if(isCreateOnly){
+            updateActivities(activity)
+            setShowActPrompt(false)
+        } else {
+            updateActivities(activity)
+
+        }
+    }
+
+    function updateActivities(activity: WeeklyActivities) {
         switch (typeOfWork) {
             case "Activity":
                 setRecap(prev => {
@@ -92,10 +100,10 @@ export default function Activity() {
         }
     }, [recap])
 
-    if (showActPrompt || showAssPrompt || showProjPrompt) return (
+    if (showActPrompt) return (
         <div className={s.addSubjectWrapper}>
             <div className={s.addSubjectBox}>
-                <button className={s.closeButton} onClick={() => { setTypeOfWork(""), setShowActPrompt(false), setShowAssPrompt(false), setShowProjPrompt(false) }}>X</button>
+                <button className={s.closeButton} onClick={() => { setTypeOfWork(""), setShowActPrompt(false)}}>X</button>
                 <h1>Create {typeOfWork}</h1>
                 <div className={s.top}>
                     <SubjectChoices subject={subject} setSubject={setSubject} />
@@ -119,12 +127,12 @@ export default function Activity() {
                 <div className={s.buttonWrapper}>
                     <button
                         className={s.submit}
-                        onClick={handleCreate}>
+                        onClick={()=>handleCreate(true)}>
                         Submit Only
                     </button>
                     <button
                         className={s.submit}
-                        onClick={handleCreate}>
+                        onClick={()=>handleCreate(false)}>
                         Create Again
                     </button>
                 </div>

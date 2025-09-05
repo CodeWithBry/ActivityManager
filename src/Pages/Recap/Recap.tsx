@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react"
-import type { ContextType, WeekList, WeeklyRecap, Weeks } from "../../Interfaces/interface"
+import type { ContextType, WeeklyRecap, Weeks } from "../../Interfaces/interface"
 import s from "./Recap.module.css"
-import { auth, firestore } from "../../Firebase/Firebase"
+import { firestore } from "../../Firebase/Firebase"
 import { doc, getDoc, onSnapshot } from "firebase/firestore"
-import { FirebaseError } from "firebase/app"
 import Days from "./Days/Days"
 import AddRecap from "./AddRecap/AddRecap"
 import { context } from "../../App"
@@ -31,49 +30,40 @@ function Recap() {
   }
 
   useEffect(() => {
-    async function getDataFromFirestore() {
-      try {
-        const listsOfRecapRef = doc(firestore, "Main_Database", "Recaps")
-        const getLists = await getDoc(listsOfRecapRef)
-        const getData = getLists.data() as WeekList[] | null
-
-        if (!getData) return 0;
-        const currentRecapRef = doc(firestore, "Main_Database", "Recaps", `${getData[getData.length - 1].monthAndDay}`, `${getData[getData.length - 1].monthAndDay}`)
-        const getCurrentRecapData = (await getDoc(currentRecapRef)).data() as WeeklyRecap
-        setWeeklyRecaps(getCurrentRecapData)
-      } catch (error) {
-        if (error instanceof FirebaseError) return
-      }
-    }
-    if (auth.currentUser) getDataFromFirestore()
-  }, [weeksChoices])
-
-  useEffect(() => {
     const recapData = doc(firestore, "Main_Database", "Recaps")
     const snap = onSnapshot(recapData, (snapshot) => {
       console.log("Render!")
       const getListsOfDate = snapshot.data()?.ListsOfRecap
       if (!getListsOfDate) return
       setSelectedWeek(getListsOfDate[getListsOfDate.length - 1])
-      async function getRecap() {
-        setWeekChoices(getListsOfDate)
-        const recapDoc = doc(firestore, "Main_Database", "Recaps", `${getListsOfDate[getListsOfDate.length - 1]?.monthAndDay}`, `${getListsOfDate[getListsOfDate.length - 1]?.monthAndDay}`)
-        const getRecapData = (await getDoc(recapDoc))
-        const getData = getRecapData.data()
-        if (!getData) return
-        const keyInstance = getListsOfDate[getListsOfDate.length - 1]?.monthAndDay
-        const getInstanceOf = getData[keyInstance as keyof typeof getData]
-        setWeeklyRecaps(getInstanceOf)
-      }
-      console.log(getListsOfDate)
-      if (getListsOfDate.length != 0) setTimeout(() => getRecap(), 5000)
+      setWeekChoices(getListsOfDate)
     })
-
 
     return () => {
       snap();
     }
   }, [])
+
+  useEffect(() => {
+    const weekRecapRef = selectedWeek ? doc(firestore, "Main_Database", "Recaps", `${selectedWeek.monthAndDay}`, `${selectedWeek.monthAndDay}`) : null
+    const snap2 = selectedWeek && weekRecapRef ? onSnapshot(weekRecapRef, (snap) => {
+      async function getRecap() {
+        const recapDoc = doc(firestore, "Main_Database", "Recaps", `${weeksChoices[weeksChoices.length - 1]?.monthAndDay}`, `${weeksChoices[weeksChoices.length - 1]?.monthAndDay}`)
+        const getRecapData = (await getDoc(recapDoc))
+        const getData = getRecapData.data()
+        if (!getData) return
+        const keyInstance = weeksChoices[weeksChoices.length - 1]?.monthAndDay
+        const getInstanceOf = getData[keyInstance as keyof typeof getData]
+        setWeeklyRecaps(getInstanceOf)
+      }
+
+      if (snap.data()) getRecap();
+    }) : null
+
+    return () => {
+      if (snap2) snap2();
+    }
+  }, [selectedWeek, weeksChoices])
 
   useEffect(() => {
     if (userObject?.uid) {

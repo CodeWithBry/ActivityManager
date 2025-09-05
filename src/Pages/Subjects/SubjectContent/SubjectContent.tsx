@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import s from "./SubjectContent.module.css"
 import { createContext, useContext, useEffect, useRef, useState, type MouseEvent } from "react";
-import type { ContextType, MenuPosition, Quarter, SchoolActivities, SubjectContext, SubjectsType } from "../../../Interfaces/interface";
+import type { ContextType, MenuPosition, Quarter, SchoolActivities, SubjectContext, SubjectsType, UserData } from "../../../Interfaces/interface";
 import ActivityDescription from "./ActivityDescription/ActivityDescription";
 import { context } from "../../../App";
 import AddPrompt from "./AddPrompt/AddPrompt";
@@ -26,7 +26,13 @@ interface SelectAll {
   Activity: boolean;
   Assignment: boolean;
   Project: boolean;
+  Exam: boolean;
+  Groupings: boolean;
 }
+
+type ArrayKeys<T> = {
+  [K in keyof T]: T[K] extends any[] ? K : never;
+}[keyof T];
 
 function SubjectContent({ params, subjects }: Props) {
   const { userData, userObject, setUserData } = useContext(context) as ContextType
@@ -38,6 +44,7 @@ function SubjectContent({ params, subjects }: Props) {
   const [activities, setActivities] = useState<SchoolActivities[] | null>(null)
   const [assignments, setAssignments] = useState<SchoolActivities[] | null>(null)
   const [projects, setProjects] = useState<SchoolActivities[] | null>(null)
+  const [exams, setExams] = useState<SchoolActivities[] | null>(null)
 
   const [showChoices, setShowChoices] = useState<boolean>(false)
   const [showMenu, setShowMenu] = useState<boolean>(false)
@@ -50,22 +57,25 @@ function SubjectContent({ params, subjects }: Props) {
   const [typeOfWork, setTypeOfWork] = useState<string>("")
   const [quarter, setQuarter] = useState<string>("2nd")
   const [semester, setSemester] = useState<string>("1st")
+  const [sortingType, setSortingType] = useState<string>("Pending")
 
   const [actDesc, setActDesc] = useState<SchoolActivities | null>(null)
   const [menuPos, setMenuPos] = useState<MenuPosition>({ x: 0, y: 0 })
+  const [selectedChoice, setSelectedChoice] = useState<Quarter>({ quarter: "2nd", sem: "1st" })
+  const [selectAll, setSelectAll] = useState<SelectAll>({
+    Activity: false,
+    Assignment: false,
+    Project: false,
+    Exam: false,
+    Groupings: false
+  })
   const [quarterAndSemChoices, setQuarterAndSemChoices] = useState<Quarter[]>([
     { quarter: "1st", sem: "1st" },
     { quarter: "2nd", sem: "1st" },
     { quarter: "3rd", sem: "2nd" },
     { quarter: "4th", sem: "2nd" },
   ])
-  const [selectedChoice, setSelectedChoice] = useState<Quarter>({ quarter: "2nd", sem: "1st" })
-  const [selectAll, setSelectAll] = useState<SelectAll>({
-    Activity: false,
-    Assignment: false,
-    Project: false
-  })
-  const [sortingType, setSortingType] = useState<string>("Pending")
+  
 
   function handleRightClick(e: MouseEvent<HTMLDivElement>, task: SchoolActivities | null, contextMenu: boolean) {
     if (contextMenu) { e.preventDefault() }
@@ -77,88 +87,57 @@ function SubjectContent({ params, subjects }: Props) {
     }
   }
 
-  function defineTypeOfWork(setToNull: boolean, status: "pending" | "completed", task?: SchoolActivities) {
+  function defineTypeOfWork(
+    setToNull: boolean,
+    status: "pending" | "completed",
+    task?: SchoolActivities
+  ) {
     switch (typeOfWork) {
       case "Activity":
-        setUserData(prev => {
-          if (prev) {
-            prev?.activities.map((origAct) => {
-              activities?.map((act) => {
-                if (origAct.id == act.id && task == null) {
-                  if (act.isSelected || actDesc?.id == act.id) {
-                    origAct.status = status
-                    setActDesc(setToNull ? null : act)
-                  }
-                } else if (task != null && task.id == origAct.id) {
-                  origAct = {...task}
-                  setActDesc(setToNull ? null : act)
-                }
-              })
-              return origAct
-            })
-
-            console.log(prev.activities)
-            saveToDatabase(prev.activities, "activities")
-            setSelectAll(prev => ({ ...prev, Activity: false }))
-            return prev
-          }
-
-          return null
-        })
+        updateActivities("activities");
         break;
       case "Assignment":
-        setUserData(prev => {
-          if (prev) {
-            prev?.assignments.map((origAct) => {
-              assignments?.map((act) => {
-                if (origAct.id == act.id && task == null) {
-                  if (act.isSelected || actDesc?.id == act.id) {
-                    origAct.status = status
-                    setActDesc(setToNull ? null : act)
-                  }
-                } else if (task != null && task.id == origAct.id) {
-                  origAct = task
-                  setActDesc(setToNull ? null : act)
-                }
-              })
-              return origAct
-            })
-            saveToDatabase(prev.assignments, "petas")
-            setSelectAll(prev => ({ ...prev, Assignment: false }))
-            return prev
-          }
-
-          return null
-        })
+        updateActivities("assignments");
         break;
       case "Project":
-        setUserData(prev => {
-          if (prev) {
-            prev?.petas.map((origAct) => {
-              projects?.map((act) => {
-                if (origAct.id == act.id && task == null) {
-                  if (act.isSelected || actDesc?.id == act.id) {
-                    origAct.status = status
-                    setActDesc(setToNull ? null : act)
-                  }
-                } else if (task != null && task.id == origAct.id) {
-                  origAct = task
-                  setActDesc(setToNull ? null : act)
-                }
-              })
-              return origAct
-            })
-            saveToDatabase(prev.petas, "petas")
-            setSelectAll(prev => ({ ...prev, Project: false }))
-            return prev
-          }
-
-          return null
-        })
+        updateActivities("petas");
         break;
+      case "Exam":
+        updateActivities("exams");
+        break;
+      // Add other cases if needed: "projects", "exams", etc.
     }
 
+    function updateActivities<K extends ArrayKeys<UserData>>(keyInstance: K) {
+      setUserData((prev) => {
+
+        if (!prev) return null;
+        const updatedList = prev[keyInstance]?.map((origAct) => {
+          // If a specific task is passed and matches the current one
+          if (task && task.id === origAct.id) {
+            return { ...task, status }; // Replace with the task data
+          }
+          // If the activity exists locally and is selected
+          const matchingLocal = activities?.find((a) => a.id === origAct.id);
+          if (matchingLocal?.isSelected) {
+            console.log(matchingLocal)
+            return { ...origAct, status }; // Update status immutably
+          }
+          return origAct; // No change
+        }) || [];
+
+        // Update actDesc once, not in the loop
+        setActDesc(setToNull ? null : actDesc);
+
+        // Save to DB and reset selection
+        saveToDatabase(updatedList, keyInstance);
+        setSelectAll((prevSelect) => ({ ...prevSelect, [typeOfWork]: false }));
+
+        return { ...prev, [keyInstance]: updatedList };
+      });
+    }
   }
+
 
   function handleSelectAll(typeOfWorkArgs: string, bool: boolean) {
     if (canSelect) switch (typeOfWorkArgs) {
@@ -170,6 +149,9 @@ function SubjectContent({ params, subjects }: Props) {
         break;
       case "Project":
         setProjects(prev => prev ? prev?.map((acts) => ({ ...acts, isSelected: acts.quarter == quarter ? bool : false })) : [])
+        break;
+      case "Exam":
+        setExams(prev => prev ? prev?.map((acts) => ({ ...acts, isSelected: acts.quarter == quarter ? bool : false })) : [])
         break;
       case "All":
         setActivities(prev => prev ? prev?.map((acts) => ({ ...acts, isSelected: acts.quarter == quarter ? bool : false })) : [])
@@ -200,6 +182,7 @@ function SubjectContent({ params, subjects }: Props) {
       setActivities(userData.activities.filter(act => act.subject === params));
       setAssignments(userData.assignments.filter(act => act.subject === params));
       setProjects(userData.petas.filter(act => act.subject === params));
+      setExams(userData.exams.filter(act => act.subject === params))
     }
   }, [userData, params])
 
@@ -281,6 +264,7 @@ function SubjectContent({ params, subjects }: Props) {
     activities, setActivities,
     assignments, setAssignments,
     projects, setProjects,
+    exams, setExams,
     quarterAndSemChoices, setQuarterAndSemChoices,
 
     quarter, setQuarter,
@@ -427,6 +411,29 @@ function SubjectContent({ params, subjects }: Props) {
                 <i className={selectAll.Project ? "fa fa-check" : s.transparent}></i>
               </button>
               <MapActivities typeOfWork={"Project"} sortingType={sortingType} />
+            </div>
+          </div>
+          <div className={`${s.subjectActs} ${s.subjectActivities}`} id="Exam">
+            <h1>
+              <i className="	fa fa-leanpub"></i>
+              <span>Exams</span>
+            </h1>
+            <div className={s.content}>
+              <AddActivity key={Math.random() * 1} type={"Activity"} />
+              <button
+                className={canSelect ? s.selectAllButton : s.hideSelectAllButton}
+                onClick={() => {
+                  if (!selectAll.Activity) {
+                    handleSelectAll("Exam", true)
+                    setSelectAll(prev => ({ ...prev, Exam: true }))
+                  } else {
+                    handleSelectAll("Exam", false)
+                    setSelectAll(prev => ({ ...prev, Exam: false }))
+                  }
+                }}>
+                <i className={selectAll.Exam ? "fa fa-check" : s.transparent}></i>
+              </button>
+              <MapActivities typeOfWork={"Exam"} sortingType={sortingType} />
             </div>
           </div>
         </div>

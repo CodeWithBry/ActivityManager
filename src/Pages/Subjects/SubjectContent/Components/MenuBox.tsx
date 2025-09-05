@@ -58,11 +58,11 @@ function MenuBox({ task }: Props) {
                 break;
             case 3:
                 if (actDesc)
-                    defineTypeOfWork(true, "pending")
+                    defineTypeOfWork(true, "pending", actDesc)
                 break;
             case 4:
                 if (actDesc)
-                    defineTypeOfWork(true, "completed")
+                    defineTypeOfWork(true, "completed", actDesc)
                 break;
             case 5:
                 task?.isSelected ? handleCheck(false) : handleCheck(true)

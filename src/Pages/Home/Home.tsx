@@ -9,7 +9,7 @@ function Home() {
   const { pageDetector, userObject } = useContext(context) as ContextType
 
   useEffect(() => {
-    userObject?.uid ?
+    userObject?.uid && pageDetector ?
       pageDetector(null, 0, false): 
       pageDetector(0, null, true) 
   }, []);

@@ -114,6 +114,7 @@ function App() {
     const initialUserData = {
       user: { Gmail: user?.email, firstName: "", middleInitial: "", lastName: "", uid: user?.uid },
       activities: [],
+      exams: [],
       assignments: [],
       petas: [],
       reviewers: []
@@ -136,8 +137,9 @@ function App() {
           }
         }
         if (!isAccountExist) {
+          const getUserData = await getDoc(docRef)
           await updateDoc(userListRef, {
-            userList: arrayUnion(userData)
+            userList: arrayUnion(getUserData.data()?.user)
           })
         }
       }
@@ -170,7 +172,6 @@ function App() {
     const unsubscribe_2 = onSnapshot(mainDatabase, async (snapshot: any) => {
       if (!snapshot.exists()) {
         setUserData(null);
-        console.log("null")
         return;
       }
 
@@ -178,7 +179,6 @@ function App() {
       const origData = getUserData.data() as UserData | null;
 
       if (origData == null) {
-        console.log(origData)
         return
       };
 
@@ -214,13 +214,11 @@ function App() {
         !mainProjects.some(proj => proj.id === u.id)
       );
 
-      console.log("❌ Removed Items From the Main Database", { removedActivities, removedAssignments, removedProjects });
       // Compare removed activities to the existing activities in the personal data
       const filterRemovedActs = mainActivities.filter(orig => !removedActivities.some(act => orig.id == act.id))
       const filterRemovedAss = mainAssignments.filter(orig => !removedAssignments.some(act => orig.id == act.id))
       const filterRemovedProj = mainProjects.filter(orig => !removedProjects.some(act => orig.id == act.id))
 
-      console.log("❌ Serialized User's Activities", { filterRemovedActs, filterRemovedAss, filterRemovedProj });
       await updateDoc(personalDatabase, {
         activities: removedActivities.length != 0 ? filterRemovedActs : [...newActivities, ...userActivities],
         assignments: removedAssignments.length != 0 ? filterRemovedAss : [...newAssignments, ...userAssignments],
@@ -254,7 +252,7 @@ function App() {
 
 
   onAuthStateChanged(auth, (user) => {
-    if (user != null) {
+    if (user != null && userObject) {
       if (userObject == null) { setUserObject(user), localStorage.setItem("User", JSON.stringify(user)) }
       const docRef = doc(firestore, `McCarthy`, `${user?.uid}`)
 
@@ -267,6 +265,8 @@ function App() {
           setUserData(promise.data())
         })
       }
+    } else {
+      setUserObject(user), localStorage.setItem("User", JSON.stringify(user))
     }
   })
 

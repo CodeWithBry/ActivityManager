@@ -94,7 +94,10 @@ function SignUp() {
         return isError ? false : true
     }
 
-
+    useEffect(()=>{
+        if(!userObject) setBasicInfo(false)
+        else {console.log(userObject)}
+    }, [userObject])
 
     useEffect(() => {
         pageDetector(1, null, true)

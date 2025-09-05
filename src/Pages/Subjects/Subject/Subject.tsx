@@ -51,7 +51,6 @@ function Subject({ subData }: Props) {
             const totalFinishedAct = activities?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
             const totalFinishedAss = assignments?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
             const totalFinishedProj = projects?.filter(act => act.status == "completed" && act.subject == subData.subjectNameAbbreviation && selectedQuarter == act.quarter)?.length
-            console.log(activities)
             setNumberOfActivities(numOfAct ? numOfAct : 0)
             setTotalFinishedActivities(totalFinishedAct ? totalFinishedAct : 0)
             setNumberOfAssignment(numOfAss ? numOfAss : 0)

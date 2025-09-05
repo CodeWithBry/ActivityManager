@@ -64,8 +64,10 @@ export interface SchoolActivities {
 export interface UserData {
   user: UserInfo;
   activities: SchoolActivities[];
+  groupings: SchoolActivities[];
   assignments: SchoolActivities[];
   petas: SchoolActivities[];
+  exams: SchoolActivities[];
   reviewers: SchoolActivities[];
 }
 
@@ -165,6 +167,7 @@ export interface SubConContextType {
   activities: SchoolActivities[] | null, setActivities: Dispatch<SetStateAction<SchoolActivities[] | null>>,
   assignments: SchoolActivities[] | null, setAssignments: Dispatch<SetStateAction<SchoolActivities[] | null>>,
   projects: SchoolActivities[] | null, setProjects: Dispatch<SetStateAction<SchoolActivities[] | null>>,
+  exams: SchoolActivities[] | null, setExams: Dispatch<SetStateAction<SchoolActivities[] | null>>,
   quarterAndSemChoices: Quarter[], setQuarterAndSemChoices: Dispatch<SetStateAction<Quarter[]>>,
 
   // NUMBERS

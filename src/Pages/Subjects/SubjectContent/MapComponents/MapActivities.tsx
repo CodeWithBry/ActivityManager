@@ -17,7 +17,7 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
     const { userData } = useContext(context) as ContextType
 
     const data = typeOfWork === "Activity"
-        ? activities || [] : typeOfWork === "Assignment" ? assignments || [] : typeOfWork === "Assignment" 
+        ? activities || [] : typeOfWork === "Assignment" ? assignments || [] : typeOfWork === "Project" 
         ? projects || [] : exams || [];
 
     const sortedData = useMemo(() => {

@@ -13,12 +13,12 @@ type Props = {
 
 export default function MapActivities({ typeOfWork, sortingType }: Props) {
     const { activities, assignments, projects, selectedChoice,
-        handleRightClick, setActDesc } = useContext(SubjectContentContext) as SubConContextType;
+        handleRightClick, setActDesc, exams } = useContext(SubjectContentContext) as SubConContextType;
     const { userData } = useContext(context) as ContextType
 
     const data = typeOfWork === "Activity"
-        ? activities || [] : typeOfWork === "Assignment"
-            ? assignments || [] : projects || [];
+        ? activities || [] : typeOfWork === "Assignment" ? assignments || [] : typeOfWork === "Assignment" 
+        ? projects || [] : exams || [];
 
     const sortedData = useMemo(() => {
         let sorted = [...data];
@@ -58,11 +58,12 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
                 />
             ))}
         </>
-    } else if(userData && sortedData.length == 0){
+    } else if (userData && sortedData.length == 0) {
         return <h2 className={s.noActivities}>
             {typeOfWork === "Activity" && "There are no Activities!"}
             {typeOfWork === "Assignment" && "There are no Assignments!"}
             {typeOfWork === "Project" && "There are no Projects!"}
+            {typeOfWork === "Exam" && "There are no Exam!"}
         </h2>
     }
 }

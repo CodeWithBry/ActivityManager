@@ -8,7 +8,7 @@ interface Props {
 
 function QuarterAndSemChoices({selectedStatus, setSelectedStatus}: Props) {
     const [showStatus, setShowStatus] = useState<boolean>(false)
-    const [statusChoices] = useState<string[]>(["(Submitted)", "(Continue)"])
+    const [statusChoices] = useState<string[]>(["(Submitted)", "(Continue)", ""])
 
     return (
         <>

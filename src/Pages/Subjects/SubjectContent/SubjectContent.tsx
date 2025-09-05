@@ -419,11 +419,11 @@ function SubjectContent({ params, subjects }: Props) {
               <span>Exams</span>
             </h1>
             <div className={s.content}>
-              <AddActivity key={Math.random() * 1} type={"Activity"} />
+              <AddActivity key={Math.random() * 1} type={"Exam"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}
                 onClick={() => {
-                  if (!selectAll.Activity) {
+                  if (!selectAll.Exam) {
                     handleSelectAll("Exam", true)
                     setSelectAll(prev => ({ ...prev, Exam: true }))
                   } else {

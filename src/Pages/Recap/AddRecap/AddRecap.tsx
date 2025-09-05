@@ -56,6 +56,7 @@ export default function AddRecap({ showAddRecap, setShowAddRecap, editRecap, set
                 [monthAndDay.monthAndDay]: recap
             })
             setShowAddRecap(false)
+            setEditRecap(false)
         } catch (error) {
             if (error instanceof FirebaseError) console.log(error)
             setShowAddRecap(false)

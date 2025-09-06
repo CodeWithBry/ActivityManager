@@ -10,7 +10,7 @@ import { FirebaseError } from "firebase/app";
 
 
 function SignUp() {
-    const { pageDetector, basicInfo, setBasicInfo, userData, userObject, signInWithFacebook, signInWithGoogle } = useContext(context) as ContextType
+    const { pageDetector, basicInfo, setBasicInfo, handleUser, userData, userObject, signInWithFacebook, signInWithGoogle, setErrorDescription, setIsLoading } = useContext(context) as ContextType
     // NAVIGATION
     const navigation = useNavigate()
 
@@ -39,14 +39,24 @@ function SignUp() {
 
     async function createAccount() {
         const valid: boolean = checkInputs()
+        setIsLoading(true)
         if (valid) {
             try {
                 await createUserWithEmailAndPassword(auth, email, password)
+                if (!auth.currentUser) return
+                console.log(auth.currentUser)
+                handleUser(auth.currentUser)
+
                 setBasicInfo(true)
             } catch (e) {
                 if (e instanceof FirebaseError) {
-                    if (e.code.includes("(auth/invalid-email)") && emailRef.current)
+                    if (e.code.includes("auth/invalid-email") && emailRef.current) {
+                        setErrorDescription("Invalid Email!")
                         emailRef.current.innerHTML = "Invalid Email!";
+                    }
+                    else console.log(e.code)
+
+                    setIsLoading(false)
                 }
             }
         }
@@ -94,9 +104,9 @@ function SignUp() {
         return isError ? false : true
     }
 
-    useEffect(()=>{
-        if(!userObject) setBasicInfo(false)
-        else {console.log(userObject)}
+    useEffect(() => {
+        if (!userObject) setBasicInfo(false)
+        else { console.log(userObject) }
     }, [userObject])
 
     useEffect(() => {

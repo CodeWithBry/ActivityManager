@@ -99,6 +99,7 @@ export interface ContextType {
   showLogForm: boolean, setShowLogForm: Dispatch<SetStateAction<boolean>>,
   showLogOutPrompt: boolean, setShowLogOutPrompt: Dispatch<SetStateAction<boolean>>,
   basicInfo: boolean, setBasicInfo: Dispatch<SetStateAction<boolean>>,
+  isLoading: boolean, setIsLoading: Dispatch<SetStateAction<boolean>>,
 
   // String and Numbers
   pathTo: string, setPathTo: Dispatch<SetStateAction<string>>,

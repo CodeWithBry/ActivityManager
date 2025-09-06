@@ -9,7 +9,7 @@ import { FirebaseError } from "firebase/app";
 
 
 function LogIn() {
-    const { pageDetector, signInWithFacebook, signInWithGoogle, setErrorDescription, userObject, userData, setBasicInfo, handleUser } = useContext(context) as ContextType
+    const { pageDetector, signInWithFacebook, signInWithGoogle, setErrorDescription, userObject, userData, setBasicInfo, handleUser, setIsLoading } = useContext(context) as ContextType
 
     // NAVIGATION
     const navigation = useNavigate()
@@ -27,11 +27,13 @@ function LogIn() {
     const [hidePassword, setHidePassword] = useState<boolean>(false)
 
     async function logIn() {
+        setIsLoading(true)
         const valid: boolean = checkInputs()
         if (valid) {
             try {
                 await signInWithEmailAndPassword(auth, email, password)
                 if (auth && auth.currentUser) handleUser(auth.currentUser)
+                setIsLoading(false)
             } catch (error) {
                 if (error instanceof FirebaseError) {
                     if (error.code == "auth/invalid-credential") setErrorDescription("Email or Password is Not Correct")
@@ -40,6 +42,8 @@ function LogIn() {
                         passwordRef.current.innerText = "Password may not be correct"
                     }
                 }
+
+                setIsLoading(false)
             }
         }
     }

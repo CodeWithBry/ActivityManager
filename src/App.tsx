@@ -23,6 +23,7 @@ import { FacebookAuthProvider, GoogleAuthProvider, onAuthStateChanged, signInWit
 import { auth, firestore } from './Firebase/Firebase.tsx';
 import { arrayUnion, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
+import Loading from './Components/Loading/Loading.tsx';
 
 function App() {
   // Navigation
@@ -38,6 +39,7 @@ function App() {
   const [showLogForm, setShowLogForm] = useState<boolean>(false)
   const [showLogOutPrompt, setShowLogOutPrompt] = useState<boolean>(false)
   const [basicInfo, setBasicInfo] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
   // STRING AND NUMERICAL VALUE
@@ -107,6 +109,7 @@ function App() {
   }
 
   async function handleUser(user: User | null) {
+    setIsLoading(true)
     const docRef = doc(firestore, "McCarthy", `${user?.uid}`);
     const userListRef = doc(firestore, "Main_Database", "Users")
     const getUserListData = await getDoc(userListRef)
@@ -144,7 +147,7 @@ function App() {
         }
       }
     }
-
+    setIsLoading(false)
   }
 
   // ************* EFFECTS ************
@@ -253,7 +256,7 @@ function App() {
 
   onAuthStateChanged(auth, (user) => {
     if (user != null && userObject) {
-      if (userObject == null) { setUserObject(user), localStorage.setItem("User", JSON.stringify(user)) }
+      if (userObject == null) { setUserObject(user), localStorage.setItem("User", JSON.stringify(user)), handleUser(user) }
       const docRef = doc(firestore, `McCarthy`, `${user?.uid}`)
 
       if (!userData) {
@@ -268,6 +271,7 @@ function App() {
     } else {
       setUserObject(user), localStorage.setItem("User", JSON.stringify(user))
     }
+
   })
 
 
@@ -282,6 +286,7 @@ function App() {
     showLogOutPrompt, setShowLogOutPrompt,
     basicInfo, setBasicInfo,
     errorDescription, setErrorDescription,
+    isLoading, setIsLoading,
 
     // String and Numbers
     pathTo, setPathTo,
@@ -301,6 +306,7 @@ function App() {
       <Navbar />
       <LogOutPrompt />
       <ErrorPrompt />
+      <Loading isLoading={isLoading}/>
       <div
         className={s.sbartabWrapper}
         style={showLogForm ? { display: "none" } : { display: "flex" }}

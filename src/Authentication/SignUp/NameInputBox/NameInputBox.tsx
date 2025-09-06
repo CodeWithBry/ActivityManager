@@ -26,27 +26,34 @@ function NameInputBox({ basicInfo, firstName,
   lastName, setLastName, firstnameRef,
   middleInitialRef, lastnameRef, checkBasicInputs }: Props) {
 
-  const { setUserData, userData } = useContext(context) as ContextType
+  const { setUserData, setIsLoading } = useContext(context) as ContextType
   const navigation = useNavigate()
 
-  async function updateData() {
-    try {
-      const docRef = doc(firestore, "McCarthy", `${auth?.currentUser?.uid}`)
-      setUserData((prev) => {
-        if (prev?.user != null) prev.user.firstName = firstName
-        if (prev?.user != null) prev.user.middleInitial = middleInitial
-        if (prev?.user != null) prev.user.lastName = lastName
-        return prev
-      })
-      await updateDoc(docRef, {
-        user: userData?.user
-      })
+  function updateData() {
+    setIsLoading(true)
+    setUserData((prev) => {
+      if (!prev?.user) return null
+      const updatedUser = {
+        ...prev?.user, firstName: firstName, middleInitial: middleInitial, lastName: lastName
+      }
+      async function setToUsersDatabase() {
+        try {
+          const docRef = doc(firestore, "McCarthy", `${auth?.currentUser?.uid}`)
+          await updateDoc(docRef, {
+            user: updatedUser
+          })
+          setIsLoading(false)
+          navigation("/")
+          window.location.reload()
+        } catch (error) {
+          console.log(error)
+          setIsLoading(false)
+        }
+      }
+      setToUsersDatabase()
+      return { ...prev, user: updatedUser }
+    })
 
-      navigation("/")
-      window.location.reload()
-    } catch (error) {
-      console.log(error)
-    }
   }
 
   if (basicInfo) return (

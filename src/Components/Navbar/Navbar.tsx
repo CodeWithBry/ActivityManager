@@ -72,12 +72,26 @@ function Navbar() {
 }
 
 function Links() {
+    const {userData} = useContext(context) as ContextType
     return <>
-        <Link to={"/"} className={s.HyperLink}>
+        {userData && <Link to={"/"} className={s.HyperLink}>
             <button className={s.authButts}>
                 Home
             </button>
-        </Link>
+        </Link>}
+        {
+            !window.location.href.toLowerCase().includes("register") ?
+                <Link to={"/register"} className={s.HyperLink}>
+                    <button className={s.authButts}>
+                        Sign Up
+                    </button>
+                </Link> :
+                <Link to={"/login"} className={s.HyperLink}>
+                    <button className={s.authButts}>
+                        Log In
+                    </button>
+                </Link>
+        }
     </>
 }
 

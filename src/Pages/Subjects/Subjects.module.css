@@ -8,9 +8,6 @@
     overflow: hidden;
     overflow-y: auto;
     gap: .5rem;
-    &::-webkit-scrollbar {
-        display: none;
-    }
 }
 
 .subjectsWrapper .top {

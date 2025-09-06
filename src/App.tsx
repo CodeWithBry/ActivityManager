@@ -189,11 +189,13 @@ function App() {
       const mainActivities: SchoolActivities[] = snapshot.data().Activity;
       const mainAssignments: SchoolActivities[] = snapshot.data().Assignment;
       const mainProjects: SchoolActivities[] = snapshot.data().Project;
+      const mainExams: SchoolActivities[] = snapshot.data().Exam;
 
       // ✅ Data from Personal DB
       const userActivities = origData.activities;
       const userAssignments = origData.assignments;
       const userProjects = origData.petas;
+      const userExams = origData.petas;
 
       // ✅ Find NEW items (exist in Main but not in Personal)
       const newActivities = mainActivities.filter(act =>
@@ -203,6 +205,9 @@ function App() {
         !userAssignments.some(u => u.id === ass.id)
       );
       const newProjects = mainProjects.filter(proj =>
+        !userProjects.some(u => u.id === proj.id)
+      );
+      const newExams = mainExams.filter(proj =>
         !userProjects.some(u => u.id === proj.id)
       );
 
@@ -216,22 +221,28 @@ function App() {
       const removedProjects = userProjects.filter(u =>
         !mainProjects.some(proj => proj.id === u.id)
       );
+      const removedExams = userExams.filter(u =>
+        !mainProjects.some(proj => proj.id === u.id)
+      );
 
       // Compare removed activities to the existing activities in the personal data
       const filterRemovedActs = mainActivities.filter(orig => !removedActivities.some(act => orig.id == act.id))
       const filterRemovedAss = mainAssignments.filter(orig => !removedAssignments.some(act => orig.id == act.id))
       const filterRemovedProj = mainProjects.filter(orig => !removedProjects.some(act => orig.id == act.id))
+      const filterRemovedExams = mainExams.filter(orig => !removedExams.some(act => orig.id == act.id))
 
       await updateDoc(personalDatabase, {
         activities: removedActivities.length != 0 ? filterRemovedActs : [...newActivities, ...userActivities],
         assignments: removedAssignments.length != 0 ? filterRemovedAss : [...newAssignments, ...userAssignments],
-        petas: removedProjects.length != 0 ? filterRemovedProj : [...newProjects, ...userProjects]
+        petas: removedProjects.length != 0 ? filterRemovedProj : [...newProjects, ...userProjects],
+        exams: removedExams.length != 0 ? filterRemovedExams : [...newExams, ...userExams],
       })
       return setUserData({
         ...origData,
         activities: removedActivities.length != 0 ? filterRemovedActs : [...newActivities, ...userActivities],
         assignments: removedAssignments.length != 0 ? filterRemovedAss : [...newAssignments, ...userAssignments],
         petas: removedProjects.length != 0 ? filterRemovedProj : [...newProjects, ...userProjects],
+        exams: removedExams.length != 0 ? filterRemovedExams : [...newExams, ...userExams],
       });
     });
 

@@ -269,10 +269,15 @@ function SubjectContent({ params, subjects }: Props) {
             })
             break;
           case "Project":
-            console.log("Project")
             projects?.map((acts) => {
               if (acts.id == activityId) {
-                console.log("Project")
+                setSelectedChoice({ quarter: acts.quarter, sem: acts.semester })
+              }
+            })
+            break;
+          case "Exam":
+            exams?.map((acts) => {
+              if (acts.id == activityId) {
                 setSelectedChoice({ quarter: acts.quarter, sem: acts.semester })
               }
             })

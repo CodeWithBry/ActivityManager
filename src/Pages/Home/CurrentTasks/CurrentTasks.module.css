@@ -21,11 +21,6 @@
     display: flex;
     align-items: center;
     gap: 2rem;
-
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
 }
 
 .currentWrapper .currentBox>div {
@@ -69,11 +64,9 @@
     height: 70%;
     overflow: hidden;
     overflow-y: auto;
-
     &::-webkit-scrollbar {
         width: 5px;
     }
-
     &::-webkit-scrollbar-thumb {
         background: #888;
         /* Adjust thumb color */
@@ -87,6 +80,7 @@
     padding: .2rem 0;
     font-size: .75rem;
     font-family: "Inter", 'Times New Roman', Times, serif;
+    text-decoration: underline;
     color: #9B51F6;
     display: flex;
     align-items: center;
@@ -102,16 +96,13 @@
         width: 90%;
         margin-bottom: 2rem;
     }
-
     .currentWrapper>h2 {
         font-size: 1.1rem;
     }
-
     .currentWrapper .currentBox>div {
         width: 15rem;
         height: 12rem;
     }
-
     .currentWrapper .currentBox>div>h3 {
         font-size: 1.1rem;
     }

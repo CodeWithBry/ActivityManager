@@ -65,7 +65,7 @@ function CurrentTasks() {
               <h3>
                 Current Assignments
               </h3>
-              <ul className={s.wrapper}> <li>There are no activities.</li></ul>
+              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
             </div>
         }
 

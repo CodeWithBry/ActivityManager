@@ -1,15 +1,19 @@
-import type { Day } from '../../../Interfaces/interface'
+import type { Dispatch, SetStateAction } from 'react';
+import type { Day, DaySelected } from '../../../Interfaces/interface'
 import s from './Days.module.css'
 
 interface Props {
   day: Day;
+  daySelected: DaySelected;
+  setDaySelected: Dispatch<SetStateAction<DaySelected>>
 }
 
-export default function Days({ day }: Props) {
+export default function Days({ day, daySelected, setDaySelected }: Props) {
+  
   return (
-    <div className={s.daysWrapper}>
+    <div className={ daySelected.day == day.day ? s.selectedDay : s.daysWrapper}>
       <div className={s.dayCard}>
-        <div className={s.dayHeader}>{day.day}</div>
+        <div className={s.dayHeader}>{day.day} <button className={daySelected.day == day.day ? s.cancelDay : s.hideButton} onClick={()=>{setDaySelected(prev => ({...prev, day: ""}))}}>x</button></div>
         <div className={s.dayContent}>
           <div className={s.activities}>
             <h2>Activities</h2>
@@ -53,7 +57,9 @@ export default function Days({ day }: Props) {
             </ul>
           </div>
         </div>
-        <button className={s.openDay}>Open</button>
+        <button className={s.openDay} onClick={()=>{setDaySelected(prev => {
+          return {...prev, day: day.day}
+        })}}>Open</button>
       </div>
     </div>
   )

@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react"
-import type { ContextType, WeeklyRecap, Weeks } from "../../Interfaces/interface"
+import type { ContextType, DaySelected, WeeklyRecap, Weeks } from "../../Interfaces/interface"
 import s from "./Recap.module.css"
 import { firestore } from "../../Firebase/Firebase"
 import { doc, getDoc, onSnapshot } from "firebase/firestore"
 import Days from "./Days/Days"
 import AddRecap from "./AddRecap/AddRecap"
 import { context } from "../../App"
+import SkeletonDays from "./SkeletonDays/SkeletonDays"
 
 function Recap() {
 
@@ -14,9 +15,11 @@ function Recap() {
   const [showWeeks, setShowWeeks] = useState<boolean>(false)
   const [showAddRecap, setShowAddRecap] = useState<boolean>(false)
   const [editRecap, setEditRecap] = useState<boolean>(false)
+  const [showSkeleton, setShowSkeleton] = useState<boolean>(true)
 
   const [weeklyRecaps, setWeeklyRecaps] = useState<WeeklyRecap | null>(null)
   const [selectedWeek, setSelectedWeek] = useState<Weeks>({})
+  const [daySelected, setDaySelected] = useState<DaySelected>({day: ""})
   const [weeksChoices, setWeekChoices] = useState<Weeks[]>([])
 
   async function switchRecap(recapWeek: string) {
@@ -32,6 +35,7 @@ function Recap() {
   useEffect(() => {
     const recapData = doc(firestore, "Main_Database", "Recaps")
     const snap = onSnapshot(recapData, (snapshot) => {
+      setShowSkeleton(true)
       console.log("Render!")
       const getListsOfDate = snapshot.data()?.ListsOfRecap
       if (!getListsOfDate) return
@@ -51,10 +55,12 @@ function Recap() {
         const recapDoc = doc(firestore, "Main_Database", "Recaps", `${weeksChoices[weeksChoices.length - 1]?.monthAndDay}`, `${weeksChoices[weeksChoices.length - 1]?.monthAndDay}`)
         const getRecapData = (await getDoc(recapDoc))
         const getData = getRecapData.data()
+        setShowSkeleton(false)
         if (!getData) return
         const keyInstance = weeksChoices[weeksChoices.length - 1]?.monthAndDay
         const getInstanceOf = getData[keyInstance as keyof typeof getData]
         setWeeklyRecaps(getInstanceOf)
+        setShowSkeleton(false)
       }
 
       if (snap.data()) getRecap();
@@ -115,7 +121,8 @@ function Recap() {
       </div>
       <div className={s.daysWrapper}>
         {
-          weeklyRecaps?.days.map(day => <Days key={Math.random() * 1} day={day} />)
+          !showSkeleton ? weeklyRecaps?.days.map(day => <Days key={Math.random() * 1} day={day} daySelected={daySelected} setDaySelected={setDaySelected}/>) :
+          <SkeletonDays count={5}/>
         }
       </div>
     </div>

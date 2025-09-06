@@ -22,12 +22,12 @@ function Subjects() {
 
   const [showChoices, setShowChoices] = useState(false);
 
-  const [selectedQuarter, setSelectedQuarter] = useState("1st");
+  const [selectedQuarter, setSelectedQuarter] = useState("2nd");
   const [selectedSemester, setSelectedSemester] = useState("1st");
 
   const [subjects] = useState<SubjectsType[]>(subjectData);
   const [selectedSemAndQuarter, setSelectedSemAndQuarter] = useState<Quarter>({
-    quarter: "1st",
+    quarter: "2nd",
     sem: "1st",
   });
 

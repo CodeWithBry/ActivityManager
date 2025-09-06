@@ -5,7 +5,7 @@ import s from "./App.module.css"
 const Home = lazy(() => import('./Pages/Home/Home'));
 const Subjects = lazy(() => import('./Pages/Subjects/Subjects'));
 const Recap = lazy(() => import('./Pages/Recap/Recap.tsx'));
-const Account = lazy(() => import('./Pages/Users/Account.tsx'))
+// const Account = lazy(() => import('./Pages/Users/Account.tsx'))
 
 import Navbar from './Components/Navbar/Navbar';
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -51,7 +51,7 @@ function App() {
     { pageName: "Home", path: "/", element: <Home />, keyId: Math.random() * 1, icon: "fa fa-home", focus: true },
     { pageName: "Subjects", path: `/subjects`, element: <Subjects />, keyId: Math.random() * 1, icon: "fa fa-book", focus: false },
     { pageName: "Recap", path: "/Recap", element: <Recap />, keyId: Math.random() * 1, icon: "fa fa-calendar", focus: false },
-    { pageName: "Account", path: "/account", element: <Account />, keyId: Math.random() * 1, icon: "	fa fa-user", focus: false },
+    // { pageName: "Account", path: "/account", element: <Account />, keyId: Math.random() * 1, icon: "	fa fa-user", focus: false },
   ])
 
   const [authTabs, setAuthTabs] = useState<AuthTab[]>([

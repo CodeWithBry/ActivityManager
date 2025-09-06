@@ -1,6 +1,7 @@
 .noActivities {
     font-size: clamp(1rem, 2vw, 1.4rem);
     text-indent: 1rem;
+    text-wrap: nowrap;
 }
 
 .showMenu {

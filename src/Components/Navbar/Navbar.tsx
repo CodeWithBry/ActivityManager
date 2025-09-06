@@ -1,21 +1,22 @@
-import { useContext, useRef, useState, type Dispatch, type SetStateAction } from "react"
+import { useContext, useState, type Dispatch, type SetStateAction } from "react"
 import s from "./Navbar.module.css"
 import { context } from "../../App"
 import { Link } from "react-router-dom"
 import type { ContextType } from "../../Interfaces/interface"
+// import Search from "./Search/Search"
 
 
 function Navbar() {
 
     const { showLogForm } = useContext(context) as ContextType
 
-    const searchBarRef = useRef<any>(null)
-    
-    const [showDropDown, setShowDropDown] = useState(false)
+    // const searchBarRef = useRef<any>(null)
 
-    function handleSearching() {
+    const [showResults, setShowResults] = useState(false)
 
-    }
+    // function handleSearching() {
+
+    // }
 
     function handleBellClick() {
 
@@ -28,11 +29,18 @@ function Navbar() {
                 <h1 id={s.title}>12 - MCCARTHY</h1>
             </div>
             <div className={s.right}>
-                <div className={s.searchWrapper}>
+                {/* <div className={s.searchWrapper}>   
+                    <Search searchInput={searchBarRef} showResults={showResults} setShowResults={setShowResults} />
                     <i className="fa fa-search" id={s.searchLogo}></i>
-                    <input type="text" id={s.searchInput} ref={searchBarRef} onKeyDown={(e) => {
-                        e.key == "Enter" ? handleSearching() : null
-                    }} placeholder="Search..." />
+                    <input
+                        type="text"
+                        id={s.searchInput}
+                        ref={searchBarRef}
+                        onFocus={()=>{setShowResults(true)}}
+                        onBlur={()=>{setShowResults(false)}}
+                        onKeyDown={(e) => {
+                            if(e.key == "Enter" && searchBarRef?.current.length != 0) handleSearching()
+                        }} placeholder="Search..." />
                     <button
                         onClick={() => {
                             handleSearching()
@@ -40,21 +48,21 @@ function Navbar() {
                         id={s.searchButton}>
                         Search
                     </button>
-                </div>
+                </div> */}
 
-                <button 
+                <button
                     id={s.hamburgerButton}
-                    onClick={()=>{ showDropDown ? setShowDropDown(false) : setShowDropDown(true) }} >
+                    onClick={() => { showResults ? setShowResults(false) : setShowResults(true) }} >
                     <i className="fa fa-navicon"></i>
                 </button>
-                <RightButtons handleBellClick={handleBellClick} setShowDropDown={setShowDropDown} />
+                <RightButtons handleBellClick={handleBellClick} setShowResults={setShowResults} />
             </div>
-            
-            <div className={showDropDown ? `${s.dropDown} ${s.showDropDown}` : `${s.dropDown} ${s.hideDropDown}  `}>
-                <RightButtons handleBellClick={handleBellClick} setShowDropDown={setShowDropDown} />
-                <button 
-                    onClick={()=>{
-                        setShowDropDown(false)
+
+            <div className={showResults ? `${s.dropDown} ${s.showResults}` : `${s.dropDown} ${s.hideDropDown}  `}>
+                <RightButtons handleBellClick={handleBellClick} setShowResults={setShowResults} />
+                <button
+                    onClick={() => {
+                        setShowResults(false)
                     }}>
                     Hide Menu
                 </button>
@@ -75,10 +83,10 @@ function Links() {
 
 type RightButtonProps = {
     handleBellClick: () => void
-    setShowDropDown: Dispatch<SetStateAction<boolean>>
+    setShowResults: Dispatch<SetStateAction<boolean>>
 }
 
-function RightButtons({ handleBellClick, setShowDropDown }: RightButtonProps) {
+function RightButtons({ handleBellClick, setShowResults }: RightButtonProps) {
 
     const { userObject, showLogForm, setShowLogForm, setShowLogOutPrompt } = useContext(context) as ContextType
 
@@ -91,7 +99,7 @@ function RightButtons({ handleBellClick, setShowDropDown }: RightButtonProps) {
                             <Links /> :
                             <>
                                 <button id={s.bell}
-                                    onClick={() => {handleBellClick(), setShowDropDown(false)}}>
+                                    onClick={() => { handleBellClick(), setShowResults(false) }}>
                                     <i className="fa fa-bell-o"></i>
                                     <p>Notifications</p>
                                     {/* {
@@ -101,7 +109,7 @@ function RightButtons({ handleBellClick, setShowDropDown }: RightButtonProps) {
                                     } */}
                                 </button>
                                 <button
-                                    onClick={() => { setShowLogOutPrompt(true),  setShowDropDown(false)}}>
+                                    onClick={() => { setShowLogOutPrompt(true), setShowResults(false) }}>
                                     Sign Out
                                 </button>
                             </>
@@ -115,7 +123,7 @@ function RightButtons({ handleBellClick, setShowDropDown }: RightButtonProps) {
                                 <Link to={"/register"} id={s.signUpLink} className={s.Links}>
                                     <button className={s.authButts} id={s.signUp} onClick={() => {
                                         setShowLogForm(true)
-                                        setShowDropDown(false)
+                                        setShowResults(false)
                                     }}>
                                         Sign Up
                                     </button>
@@ -123,7 +131,7 @@ function RightButtons({ handleBellClick, setShowDropDown }: RightButtonProps) {
                                 <Link to={"/login"} id={s.logInLink} className={s.Links}>
                                     <button className={s.authButts} id={s.logIn} onClick={() => {
                                         setShowLogForm(true)
-                                        setShowDropDown(false)
+                                        setShowResults(false)
                                     }}>
                                         Log In
                                     </button>

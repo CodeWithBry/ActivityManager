@@ -31,7 +31,7 @@ function ActivityDescription() {
                                     className={actDesc?.status == "completed" ? s.highlight : s.unhighlight}
                                     onClick={() => {
                                         if (actDesc) {
-                                            defineTypeOfWork(false, "completed")
+                                            defineTypeOfWork(false, "completed", actDesc)
                                         }
                                     }}>
                                     Finish
@@ -40,7 +40,7 @@ function ActivityDescription() {
                                     className={actDesc?.status == "pending" ? s.highlight : s.unhighlight}
                                     onClick={() => {
                                         if (actDesc) {
-                                            defineTypeOfWork(false, "pending")
+                                            defineTypeOfWork(false, "pending", actDesc)
                                         }
                                     }}>
                                     Pending

@@ -1,4 +1,4 @@
-.dayCard {
+.daysWrapper .dayCard {
     width: 340px;
     height: 500px;
     background: var(--sixty-percent);
@@ -11,8 +11,63 @@
     transition: all .3s ease;
 }
 
-.dayCard:hover {
+.daysWrapper:first-child {
+    margin-left: clamp(1.5rem, 2.5vw, 3rem);
+}
+
+.daysWrapper:last-child {
+    margin-right: clamp(1.5rem, 2.5vw, 3rem);
+}
+
+.selectedDay {
+    width: 100vw;
+    height: 110vh;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    translate: -50%;
+    z-index: 10;
+}
+
+.selectedDay .dayCard {
+    width: 100%;
+    height: 100%;
+    background: var(--sixty-percent);
+}
+
+.daysWrapper .dayCard:hover {
     scale: 1.05;
+}
+
+.dayHeader {
+    position: relative;
+}
+
+.hideButton {
+    display: none;
+}
+
+.dayHeader .cancelDay {
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: var(--font);
+}
+
+.dayHeader .cancelDay:hover {
+    background-color: #eee;
+    /* Light gray on hover */
+    color: #888;
+    /* Darker gray on hover */
 }
 
 .dayHeader,
@@ -93,6 +148,10 @@
 
 .openDay:hover {
     background-color: var(--ten-percent);
+}
+
+.selectedDay .openDay {
+    display: none;
 }
 
 @media (max-width: 768px) and (max-height: 900px) {

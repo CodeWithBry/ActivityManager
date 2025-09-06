@@ -132,27 +132,53 @@
 }
 
 .contentWrapper .subjectActs {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: start;
-    width: fit-content;
     height: fit-content;
     gap: .5rem;
     color: var(--ten-percent);
 }
 
-.subjectActs:nth-of-type(3) {
+.subjectActs:nth-of-type(4) {
     margin-bottom: 6rem;
 }
 
 .contentWrapper .subjectActs>h1 {
     font-size: clamp(1.2rem, 2.5vw, 2.2rem);
     display: flex;
+    width: 100%;
+}
+
+.contentWrapper .subjectActs>h1 .buttonWrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 1rem;
+    margin-left: auto;
+}
+
+.buttonWrapper>button {
+    font-size: 1.3rem;
+    color: white;
+    padding: .2rem 1rem;
+    border-radius: 1rem;
+    border: none;
+    background-color: #f5b11f;
+    outline: none;
+    cursor: pointer;
+    transition: all .2s ease-out;
+}
+
+.buttonWrapper>button:hover {
+    background-color: #9B51F6;
 }
 
 .content {
     display: flex;
-    width: 87vw;
+    align-items: center;
+    width: 100%;
     padding: 2rem 1rem 2rem 0;
     gap: .5rem;
     overflow-x: auto;
@@ -199,6 +225,11 @@
 @media screen and (max-width: 400px) {
     .hideChoices {
         display: none;
+    }
+    .contentWrapper .subjectActs>h1 {
+        font-size: clamp(1.2rem, 2.5vw, 2.2rem);
+        display: flex;
+        width: 92vw;
     }
     .right {
         position: relative;

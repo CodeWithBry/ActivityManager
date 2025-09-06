@@ -89,8 +89,7 @@ function Subject({ subData }: Props) {
                                 <div
                                     className={s.bar}
                                     style={{
-                                        width: `${numberOfActivities >= totalFinishedActivities && numberOfActivities != 0
-                                            ? calcPerAct : 100}%`
+                                        width: `${calcPerAct}%`
                                     }}>
                                 </div>
                             </div>
@@ -107,8 +106,7 @@ function Subject({ subData }: Props) {
                         <div className={s.bottom}>
                             <div className={s.barWrapper}>
                                 <div className={s.bar} style={{
-                                    width: `${numberOfAssignment >= totalFinishedAssignment && numberOfAssignment != 0
-                                        ? calcPerAss : 100}%`
+                                    width: `${calcPerAss}%`
                                 }}>
                                 </div>
                             </div>
@@ -124,8 +122,7 @@ function Subject({ subData }: Props) {
                         <div className={s.bottom}>
                             <div className={s.barWrapper}>
                                 <div className={s.bar} style={{
-                                    width: `${numberOfProjects >= totalFinishedProjects && numberOfProjects != 0
-                                        ? calcPerProj : 100}%`
+                                    width: `${calcPerProj}%`
                                 }}>
                                 </div>
                             </div>

@@ -1,0 +1,27 @@
+.skeletonDay {
+    flex-shrink: 0;
+    width: 340px;
+    height: 500px;
+    background: rgba(0, 0, 0, 0.116);
+    border-radius: 12px;
+    box-shadow: -10px 10px 0px 0px rgba(0, 0, 0, 0.253), -5px 5px 0px 0px rgba(0, 0, 0, 0.097), var(--drop-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: all .3s ease;
+    animation: blinking 1.5s ease infinite;
+    ;
+}
+
+@keyframes blinking {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

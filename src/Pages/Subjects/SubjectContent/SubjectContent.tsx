@@ -37,7 +37,13 @@ type ArrayKeys<T> = {
 function SubjectContent({ params, subjects }: Props) {
   const { userData, userObject, setUserData } = useContext(context) as ContextType
   const { selectedQuarter, selectedSemester } = useContext(SubjectsContext) as SubjectContext
+
   const menu = useRef<HTMLDivElement | null>(null)
+  const activitySliderRef = useRef<HTMLDivElement | null>(null)
+  const assignmentSliderRef = useRef<HTMLDivElement | null>(null)
+  const projectsSliderRef = useRef<HTMLDivElement | null>(null)
+  const examsSliderRef = useRef<HTMLDivElement | null>(null)
+
   const navigation = useNavigate()
   const location = useLocation()
 
@@ -75,7 +81,7 @@ function SubjectContent({ params, subjects }: Props) {
     { quarter: "3rd", sem: "2nd" },
     { quarter: "4th", sem: "2nd" },
   ])
-  
+
 
   function handleRightClick(e: MouseEvent<HTMLDivElement>, task: SchoolActivities | null, contextMenu: boolean) {
     if (contextMenu) { e.preventDefault() }
@@ -127,7 +133,14 @@ function SubjectContent({ params, subjects }: Props) {
         }) || [];
 
         // Update actDesc once, not in the loop
-        setActDesc(setToNull ? null : actDesc);
+
+        setActDesc(prev => {
+          if (!prev || setToNull) {
+            console.log(task)
+            return null;
+          }
+          return { ...prev, status: status }
+        })
 
         // Save to DB and reset selection
         saveToDatabase(updatedList, keyInstance);
@@ -173,6 +186,35 @@ function SubjectContent({ params, subjects }: Props) {
       }
     } catch (error) {
 
+    }
+  }
+
+  function slideElement(bool: boolean, defineType: string) {
+    switch (defineType) {
+      case "Activity":
+        var e = activitySliderRef.current
+        var scrollAmount = 208
+        if (e)
+          bool == false ? e.scrollBy({ left: scrollAmount, behavior: 'smooth' }) : e.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        break;
+      case "Assignment":
+        var e = assignmentSliderRef.current
+        var scrollAmount = 208
+        if (e)
+          bool == false ? e.scrollBy({ left: scrollAmount, behavior: 'smooth' }) : e.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        break;
+      case "Project":
+        var e = projectsSliderRef.current
+        var scrollAmount = 208
+        if (e)
+          bool == false ? e.scrollBy({ left: scrollAmount, behavior: 'smooth' }) : e.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        break;
+      case "Exam":
+        var e = examsSliderRef.current
+        var scrollAmount = 208
+        if (e)
+          bool == false ? e.scrollBy({ left: scrollAmount, behavior: 'smooth' }) : e.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        break;
     }
   }
 
@@ -347,8 +389,17 @@ function SubjectContent({ params, subjects }: Props) {
             <h1>
               <i className="	fa fa-leanpub"></i>
               <span>Activities</span>
+
+              <div className={s.buttonWrapper}>
+                <button onClick={() => { slideElement(true, "Activity") }}>
+                  <i className="	fa fa-angle-left"></i>
+                </button>
+                <button onClick={() => { slideElement(false, "Activity") }}>
+                  <i className="	fa fa-angle-right"></i>
+                </button>
+              </div>
             </h1>
-            <div className={s.content}>
+            <div ref={activitySliderRef} className={s.content}>
               <AddActivity key={Math.random() * 1} type={"Activity"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}
@@ -370,8 +421,16 @@ function SubjectContent({ params, subjects }: Props) {
             <h1>
               <i className="	fa fa-leanpub"></i>
               <span>Assignment</span>
+              <div className={s.buttonWrapper}>
+                <button onClick={() => { slideElement(true, "Assignment") }}>
+                  <i className="	fa fa-angle-left"></i>
+                </button>
+                <button onClick={() => { slideElement(false, "Assignment") }}>
+                  <i className="	fa fa-angle-right"></i>
+                </button>
+              </div>
             </h1>
-            <div className={s.content}>
+            <div ref={assignmentSliderRef}  className={s.content}>
               <AddActivity key={Math.random() * 1} type={"Assignment"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}
@@ -394,8 +453,16 @@ function SubjectContent({ params, subjects }: Props) {
               <i className="	fa fa-leanpub"></i>
               <span>Performance Tasks</span>
 
+              <div className={s.buttonWrapper}>
+                <button onClick={() => { slideElement(true, "Project") }}>
+                  <i className="	fa fa-angle-left"></i>
+                </button>
+                <button onClick={() => { slideElement(false, "Project") }}>
+                  <i className="	fa fa-angle-right"></i>
+                </button>
+              </div>
             </h1>
-            <div className={s.content}>
+            <div ref={projectsSliderRef}  className={s.content}>
               <AddActivity key={Math.random() * 1} type={"Project"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}
@@ -416,9 +483,18 @@ function SubjectContent({ params, subjects }: Props) {
           <div className={`${s.subjectActs} ${s.subjectActivities}`} id="Exam">
             <h1>
               <i className="	fa fa-leanpub"></i>
-              <span>Exams</span>
+              <span>Exams And Quizes</span>
+
+              <div className={s.buttonWrapper}>
+                <button onClick={() => { slideElement(true, "Exam") }}>
+                  <i className="	fa fa-angle-left"></i>
+                </button>
+                <button onClick={() => { slideElement(false, "Exam") }}>
+                  <i className="	fa fa-angle-right"></i>
+                </button>
+              </div>
             </h1>
-            <div className={s.content}>
+            <div ref={examsSliderRef}  className={s.content}>
               <AddActivity key={Math.random() * 1} type={"Exam"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}

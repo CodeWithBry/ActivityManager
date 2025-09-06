@@ -106,10 +106,6 @@
     overflow-x: auto;
 }
 
-.daysWrapper>div:first-child {
-    margin-left: clamp(1.5rem, 2.5vw, 3rem);
-}
-
 .daysWrapper>div:last-child {
     margin-right: clamp(1.5rem, 2.5vw, 3rem);
 }

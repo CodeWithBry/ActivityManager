@@ -143,6 +143,10 @@ export interface Day {
   Exams: WeeklyActivities[]
 }
 
+export interface DaySelected {
+  day: string;
+}
+
 export interface WeekList {
   isCurrent: false;
   monthAndDay: string;

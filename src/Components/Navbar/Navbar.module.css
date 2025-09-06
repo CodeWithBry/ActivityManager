@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
 .nav,
 .navWithLogForm {
     display: flex;
@@ -161,7 +160,6 @@
 }
 
 @media screen and (max-width: 768px) {
-
     .searchWrapper #searchInput,
     .searchWrapper #searchButton {
         display: none;
@@ -172,48 +170,38 @@
     .nav {
         height: 3.5rem;
     }
-
     .left #iconImage {
         width: 2.5rem;
         height: 2.5rem;
     }
-
     .right {
         gap: .2rem;
     }
-
     .searchWrapper #searchLogo {
         padding: .6rem;
     }
-
     .searchWrapper #searchInput,
     .searchWrapper #searchButton {
         display: none;
     }
-
     .right .authButts {
         padding: .6rem;
     }
 }
 
-
 @media screen and (max-width: 380px) {
     .left #title {
         font-size: .75rem;
     }
-
     .right .Links,
     .right .HyperLink>button,
     .right #bell,
     .right>button:nth-of-type(3) {
         display: none;
     }
-
     .right #hamburgerButton {
         display: grid;
     }
-
-
     .dropDown {
         display: flex;
         flex-direction: column;
@@ -223,19 +211,15 @@
         top: 56px;
         z-index: 5;
     }
-
     .showDropDown {
         display: flex;
     }
-
     .hideDropDown {
         display: none;
     }
-
-
     .dropDown>button,
     .dropDown .Links .authButts,
-    .dropDown .HyperLink > button  {
+    .dropDown .HyperLink>button {
         background-color: white;
         color: var(--thirty-percent);
         font-weight: 600;
@@ -245,19 +229,15 @@
         padding: .75rem 0;
         border-top: none;
     }
-
     .dropDown #bell {
         position: relative;
     }
-
     .dropDown #bell>i {
         display: none;
     }
-
     .dropDown #bell>p {
         display: block;
     }
-
     .dropDown #bell>span {
         position: absolute;
         top: 50%;

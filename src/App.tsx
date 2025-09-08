@@ -20,7 +20,7 @@ export const context = createContext({})
 import type { Tab, AuthTab, ContextType, UserData, SchoolActivities } from './Interfaces/interface';
 import LogOutPrompt from './Components/LogOutPrompt/LogOutPrompt.tsx';
 import { FacebookAuthProvider, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, type User } from 'firebase/auth';
-import { auth, firestore } from './Firebase/Firebase.tsx';
+import { auth, firestore, requestFCMToken } from './Firebase/Firebase.tsx';
 import { arrayUnion, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 import Loading from './Components/Loading/Loading.tsx';
@@ -40,7 +40,6 @@ function App() {
   const [showLogOutPrompt, setShowLogOutPrompt] = useState<boolean>(false)
   const [basicInfo, setBasicInfo] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
 
   // STRING AND NUMERICAL VALUE
   const [pathTo, setPathTo] = useState<string>(window.location.href)
@@ -261,6 +260,18 @@ function App() {
     }
   }, [userData, userObject])
 
+  useEffect(() => {
+    async function getFCMToken () {
+      try {
+        const tokenID = await requestFCMToken();
+        console.log(tokenID)
+      } catch (error) {
+        
+      }
+    }
+
+    getFCMToken();
+  }, [])
 
   // ********* CONTEXT VARIRABLES ***********
 

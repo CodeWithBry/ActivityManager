@@ -28,7 +28,7 @@ export const requestFCMToken = async (): Promise<string> => {
 
     if (permission === "granted") {
       const registration = await navigator.serviceWorker.register(
-        "/Activity_Manager/firebase-messaging-sw.js"
+        "/ActivityManager/firebase-messaging-sw.js"
       );
       const token = await getToken(messaging, {
         vapidKey: vapidKey,

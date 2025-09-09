@@ -1,4 +1,4 @@
-import { useRef, useContext, useState, type Dispatch, type SetStateAction } from "react"
+import { useContext, useState, type Dispatch, type SetStateAction } from "react"
 import s from "./Navbar.module.css"
 import { context } from "../../App"
 import { Link } from "react-router-dom"

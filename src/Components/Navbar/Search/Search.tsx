@@ -25,7 +25,7 @@ function Search({ setHideSearch, hideSearch }: Props) {
                             id={s.searchInput}
                             ref={searchInput}
                             onFocus={() => { setHideSearch(false) }}
-                            onKeyDown={(e) => {
+                            onKeyDown={() => {
                                 // if (e.key == "Enter" && searchInput?.current.length != 0) 
                             }} placeholder="Search..." />
                         <button

@@ -18,34 +18,39 @@ const firebaseConfig_1 = {
 const application_1 = initializeApp(firebaseConfig_1);
 export const firestore = getFirestore(application_1);
 export const auth = getAuth(application_1);
-const messaging = getMessaging(application_1);
 const vapidKey = import.meta.env.VITE_REACT_APP_FIREBASE_VAP_ID;
 
+const messaging = getMessaging(application_1);
+
 export const requestFCMToken = async (): Promise<string> => {
-  try {
-    const permission = await Notification.requestPermission();
-    console.log("Notification permission:", permission);
-
-    if (permission === "granted") {
-      const registration = await navigator.serviceWorker.register(
-        "/ActivityManager/firebase-messaging-sw.js"
-      );
-      const token = await getToken(messaging, {
-        vapidKey: vapidKey,
-        serviceWorkerRegistration: registration,
-      });
-
-      if (!token) {
-        throw new Error("FCM token is null. Possible causes: invalid VAPID key, missing Firebase config, or unsupported browser.");
-      }
-
-      console.log("FCM Token:", token);
-      return token;
-    }
-
-    throw new Error("Notification permission not granted");
-  } catch (e) {
-    console.error("Error in requestFCMToken:", e);
-    throw e;
+  if (!('Notification' in window)) {
+    throw new Error('Notifications are not supported in this browser.');
   }
+
+  const currentPermission = Notification.permission;
+  console.log("Current permission:", currentPermission);
+
+  if (currentPermission === 'denied') {
+    throw new Error('Notification permission was denied. Please enable notifications in browser settings.');
+  }
+
+  if (currentPermission !== 'granted') {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      throw new Error('Notification permission not granted by user.');
+    }
+  }
+
+  console.log("Registering Service Worker...");
+  const registration = await navigator.serviceWorker.register('/ActivityManager/firebase-messaging-sw.js');
+
+  console.log("Getting FCM token...");
+  const token = await getToken(messaging, {
+    vapidKey,
+    serviceWorkerRegistration: registration,
+  });
+
+  console.log(token)
+  if (!token) throw new Error('Failed to retrieve FCM token.');
+  return token;
 };

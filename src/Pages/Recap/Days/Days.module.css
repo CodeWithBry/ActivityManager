@@ -22,7 +22,7 @@
 .selectedDay {
     width: 100vw;
     height: 110vh;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 50%;
     translate: -50%;
@@ -155,8 +155,15 @@
 }
 
 @media (max-width: 768px) and (max-height: 900px) {
-    .dayCard {
+    .daysWrapper .dayCard {
         width: 270px;
         height: 400px;
+    }
+}
+
+@media (max-width: 400px) and (max-height: 900px) {
+    .daysWrapper .dayCard {
+        width: 230px;
+        height: 380px;
     }
 }

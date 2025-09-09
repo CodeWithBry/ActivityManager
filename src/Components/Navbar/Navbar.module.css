@@ -55,33 +55,19 @@
     display: flex;
     font-size: clamp(.6rem, 2vw, 1rem);
     border-radius: 1rem;
-    overflow: hidden;
     box-shadow: var(--drop-shadow);
 }
 
 .searchWrapper #searchLogo {
     background: transparent;
+    cursor: pointer;
 }
 
 .searchWrapper>* {
-    padding: .65rem 1rem;
+    padding: .65rem;
     background: transparent;
     outline: none;
     border: 0;
-}
-
-.searchWrapper #searchInput+#searchButton {
-    font-family: var(--font);
-    font-weight: bold;
-}
-
-.searchWrapper #searchInput {
-    width: 13rem;
-}
-
-.searchWrapper #searchButton {
-    color: var(--sixty-percent);
-    background-color: var(--thirty-percent);
 }
 
 .right .authButts,
@@ -113,7 +99,7 @@
 }
 
 .right #logIn,
-.right>button:nth-of-type(3) {
+.right>button:nth-of-type(2) {
     background-color: var(--thirty-percent);
 }
 
@@ -196,7 +182,7 @@
     .right .Links,
     .right .HyperLink>button,
     .right #bell,
-    .right>button:nth-of-type(3) {
+    .right>button:nth-of-type(2) {
         display: none;
     }
     .right #hamburgerButton {

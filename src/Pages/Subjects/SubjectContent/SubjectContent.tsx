@@ -126,8 +126,7 @@ function SubjectContent({ params, subjects }: Props) {
           // If the activity exists locally and is selected
           const matchingLocal = activities?.find((a) => a.id === origAct.id);
           if (matchingLocal?.isSelected) {
-            console.log(matchingLocal)
-            return { ...origAct, status }; // Update status immutably
+            return { ...origAct, status, isSelected: false }; // Update status immutably
           }
           return origAct; // No change
         }) || [];
@@ -136,7 +135,6 @@ function SubjectContent({ params, subjects }: Props) {
 
         setActDesc(prev => {
           if (!prev || setToNull) {
-            console.log(task)
             return null;
           }
           return { ...prev, status: status }
@@ -435,7 +433,7 @@ function SubjectContent({ params, subjects }: Props) {
                 </button>
               </div>
             </h1>
-            <div ref={assignmentSliderRef}  className={s.content}>
+            <div ref={assignmentSliderRef} className={s.content}>
               <AddActivity key={Math.random() * 1} type={"Assignment"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}
@@ -467,7 +465,7 @@ function SubjectContent({ params, subjects }: Props) {
                 </button>
               </div>
             </h1>
-            <div ref={projectsSliderRef}  className={s.content}>
+            <div ref={projectsSliderRef} className={s.content}>
               <AddActivity key={Math.random() * 1} type={"Project"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}
@@ -499,7 +497,7 @@ function SubjectContent({ params, subjects }: Props) {
                 </button>
               </div>
             </h1>
-            <div ref={examsSliderRef}  className={s.content}>
+            <div ref={examsSliderRef} className={s.content}>
               <AddActivity key={Math.random() * 1} type={"Exam"} />
               <button
                 className={canSelect ? s.selectAllButton : s.hideSelectAllButton}

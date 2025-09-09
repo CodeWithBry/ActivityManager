@@ -260,17 +260,16 @@ function App() {
     }
   }, [userData, userObject])
 
-  useEffect(() => {
-    async function getFCMToken () {
+  useEffect(()=>{
+    async function generateToken() {
       try {
-        const tokenID = await requestFCMToken();
-        console.log(tokenID)
+        const getFMCToken = await requestFCMToken();
+        console.log(getFMCToken);
       } catch (error) {
-        
+        console.log(error)
       }
     }
-
-    getFCMToken();
+    generateToken();
   }, [])
 
   // ********* CONTEXT VARIRABLES ***********

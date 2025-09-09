@@ -12,15 +12,7 @@ function Navbar() {
 
     // const searchBarRef = useRef<any>(null)
 
-    const [showResults, setShowResults] = useState(false)
-
-    // function handleSearching() {
-
-    // }
-
-    function handleBellClick() {
-
-    }
+    const [showSearchPrompt, setShowSearchPrompt] = useState(false)
 
     return (
         <div className={!showLogForm ? s.nav : s.navWithLogForm}>
@@ -29,40 +21,24 @@ function Navbar() {
                 <h1 id={s.title}>12 - MCCARTHY</h1>
             </div>
             <div className={s.right}>
-                {/* <div className={s.searchWrapper}>   
-                    <Search searchInput={searchBarRef} showResults={showResults} setShowResults={setShowResults} />
+                {/* <div className={s.searchWrapper} onClick={()=>setShowSearchPrompt(true)}>   
+                    <Search searchInput={searchBarRef} showSearchPrompt={showSearchPrompt} setShowSearchPrompt={setShowSearchPrompt} />
                     <i className="fa fa-search" id={s.searchLogo}></i>
-                    <input
-                        type="text"
-                        id={s.searchInput}
-                        ref={searchBarRef}
-                        onFocus={()=>{setShowResults(true)}}
-                        onBlur={()=>{setShowResults(false)}}
-                        onKeyDown={(e) => {
-                            if(e.key == "Enter" && searchBarRef?.current.length != 0) handleSearching()
-                        }} placeholder="Search..." />
-                    <button
-                        onClick={() => {
-                            handleSearching()
-                        }}
-                        id={s.searchButton}>
-                        Search
-                    </button>
                 </div> */}
 
                 <button
                     id={s.hamburgerButton}
-                    onClick={() => { showResults ? setShowResults(false) : setShowResults(true) }} >
+                    onClick={() => { showSearchPrompt ? setShowSearchPrompt(false) : setShowSearchPrompt(true) }} >
                     <i className="fa fa-navicon"></i>
                 </button>
-                <RightButtons handleBellClick={handleBellClick} setShowResults={setShowResults} />
+                <RightButtons setShowSearchPrompt={setShowSearchPrompt} />
             </div>
 
-            <div className={showResults ? `${s.dropDown} ${s.showResults}` : `${s.dropDown} ${s.hideDropDown}  `}>
-                <RightButtons handleBellClick={handleBellClick} setShowResults={setShowResults} />
+            <div className={showSearchPrompt ? `${s.dropDown} ${s.showSearchPrompt}` : `${s.dropDown} ${s.hideDropDown}  `}>
+                <RightButtons setShowSearchPrompt={setShowSearchPrompt} />
                 <button
                     onClick={() => {
-                        setShowResults(false)
+                        setShowSearchPrompt(false)
                     }}>
                     Hide Menu
                 </button>
@@ -96,11 +72,10 @@ function Links() {
 }
 
 type RightButtonProps = {
-    handleBellClick: () => void
-    setShowResults: Dispatch<SetStateAction<boolean>>
+    setShowSearchPrompt: Dispatch<SetStateAction<boolean>>
 }
 
-function RightButtons({ handleBellClick, setShowResults }: RightButtonProps) {
+function RightButtons({ setShowSearchPrompt }: RightButtonProps) {
 
     const { userObject, showLogForm, setShowLogForm, setShowLogOutPrompt } = useContext(context) as ContextType
 
@@ -112,18 +87,8 @@ function RightButtons({ handleBellClick, setShowResults }: RightButtonProps) {
                         showLogForm ?
                             <Links /> :
                             <>
-                                <button id={s.bell}
-                                    onClick={() => { handleBellClick(), setShowResults(false) }}>
-                                    <i className="fa fa-bell-o"></i>
-                                    <p>Notifications</p>
-                                    {/* {
-                                        userData?.notifs?.length != 0 ?
-                                            <span id={"notifIcon"}>{userData?.notifs <= 99 ? userData?.notifs : "99+"}</span> :
-                                            null
-                                    } */}
-                                </button>
                                 <button
-                                    onClick={() => { setShowLogOutPrompt(true), setShowResults(false) }}>
+                                    onClick={() => { setShowLogOutPrompt(true), setShowSearchPrompt(false) }}>
                                     Sign Out
                                 </button>
                             </>
@@ -137,7 +102,7 @@ function RightButtons({ handleBellClick, setShowResults }: RightButtonProps) {
                                 <Link to={"/register"} id={s.signUpLink} className={s.Links}>
                                     <button className={s.authButts} id={s.signUp} onClick={() => {
                                         setShowLogForm(true)
-                                        setShowResults(false)
+                                        setShowSearchPrompt(false)
                                     }}>
                                         Sign Up
                                     </button>
@@ -145,7 +110,7 @@ function RightButtons({ handleBellClick, setShowResults }: RightButtonProps) {
                                 <Link to={"/login"} id={s.logInLink} className={s.Links}>
                                     <button className={s.authButts} id={s.logIn} onClick={() => {
                                         setShowLogForm(true)
-                                        setShowResults(false)
+                                        setShowSearchPrompt(false)
                                     }}>
                                         Log In
                                     </button>

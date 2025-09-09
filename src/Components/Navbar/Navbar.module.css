@@ -53,17 +53,24 @@
 
 .searchWrapper {
     display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: fit-content;
+}
+
+.searchInput {
+    display: flex;
     font-size: clamp(.6rem, 2vw, 1rem);
     border-radius: 1rem;
     box-shadow: var(--drop-shadow);
 }
 
-.searchWrapper #searchLogo {
+.searchInput #searchLogo {
     background: transparent;
     cursor: pointer;
 }
 
-.searchWrapper>* {
+.searchInput>* {
     padding: .65rem;
     background: transparent;
     outline: none;
@@ -146,8 +153,8 @@
 }
 
 @media screen and (max-width: 768px) {
-    .searchWrapper #searchInput,
-    .searchWrapper #searchButton {
+    .searchInput #searchInput,
+    .searchInput #searchButton {
         display: none;
     }
 }
@@ -163,11 +170,11 @@
     .right {
         gap: .2rem;
     }
-    .searchWrapper #searchLogo {
+    .searchInput #searchLogo {
         padding: .6rem;
     }
-    .searchWrapper #searchInput,
-    .searchWrapper #searchButton {
+    .searchInput #searchInput,
+    .searchInput #searchButton {
         display: none;
     }
     .right .authButts {
@@ -195,7 +202,7 @@
         height: fit-content;
         position: absolute;
         top: 56px;
-        z-index: 5;
+        z-index: 1;
     }
     .showDropDown {
         display: flex;

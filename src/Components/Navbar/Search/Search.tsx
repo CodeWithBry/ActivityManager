@@ -1,62 +1,50 @@
-// import { useContext, useEffect, useState, type Dispatch, type SetStateAction } from "react";
-// import s from "./Search.module.css";
-// import { context } from "../../../App";
-// import type { ContextType, SchoolActivities } from "../../../Interfaces/interface";
+import { useRef, type Dispatch, type SetStateAction } from "react";
+import s from "./Search.module.css"
 
-// interface Props {
-//     showSearchPrompt: boolean;
-//     setShowSearchPrompt: Dispatch<SetStateAction<boolean>>;
-//     searchInput: any;
-// }
+interface Props {
+    hideSearch: boolean;
+    setHideSearch: Dispatch<SetStateAction<boolean>>;
+    
+}
 
-// export default function Search({ showSearchPrompt, setShowSearchPrompt, searchInput }: Props) {
-//     const { userData } = useContext(context) as ContextType
+function Search({ setHideSearch, hideSearch }: Props) {
+    const searchInput = useRef<HTMLInputElement | null>(null)
 
-//     const [copyOfData, setCopyOfData] = useState<SchoolActivities[] | null>(null)
-//     const [filteredData, setFilteredData] = useState<SchoolActivities[] | null>(null)
+    return (
+        <>
+            <div className={hideSearch ? s.hideSearch : s.searchesWrapper}>
+                <div className={s.top}>
+                    <div className={s.mainNav}>
+                        <h1 >Search Tab</h1>
+                        <button onClick={(e) => {e.stopPropagation(), setHideSearch(true)}}> Close </button>
+                    </div>
+                    <div className={s.searchWrapper}>
+                        <i className="fa fa-search" id={s.searchLogo}></i>
+                        <input
+                            type="text"
+                            id={s.searchInput}
+                            ref={searchInput}
+                            onFocus={() => { setHideSearch(false) }}
+                            onKeyDown={(e) => {
+                                // if (e.key == "Enter" && searchInput?.current.length != 0) 
+                            }} placeholder="Search..." />
+                        <button
+                            onClick={() => {
+                                setHideSearch(true)
+                            }}
+                            id={s.searchButton}>
+                            Search
+                        </button>
+                    </div>
+                </div>
+                {/* <div className={s.searches}>
+                    <ul>{
+                        filteredData && filteredData.map((act) => <li>{act.description}</li>)
+                    }</ul>
+                </div> */}
+            </div>
+        </>
+    )
+}
 
-//     function handleSearching() {
-//         setFilteredData(prev => {
-//             if (!prev || !copyOfData) return null;
-
-//             return copyOfData.filter(acts => searchInput.current.innerHTML.includes(acts.description))
-//         })
-//     }
-
-//     useEffect(() => {
-//         if (userData) setCopyOfData([...userData.activities, ...userData.assignments, ...userData.exams, ...userData.petas])
-//     }, [userData])
-
-//     if (showSearchPrompt) return (
-//         <>
-//             <div className={s.searchesWrapper}>
-//                 <div className={s.top}>
-//                     <div className={s.searchWrapper}>
-//                         <i className="fa fa-search" id={s.searchLogo}></i>
-//                         <input
-//                             type="text"
-//                             id={s.searchInput}
-//                             ref={searchInput}
-//                             onFocus={() => { setShowSearchPrompt(true) }}
-//                             onKeyDown={(e) => {
-//                                 if (e.key == "Enter" && searchInput?.current.length != 0) handleSearching()
-//                             }} placeholder="Search..." />
-//                         <button
-//                             onClick={() => {
-//                                 handleSearching()
-//                             }}
-//                             id={s.searchButton}>
-//                             Search
-//                         </button>
-//                     </div>
-//                     <button onClick={()=>setShowSearchPrompt(false)}> Close </button>
-//                 </div>
-//                 <div className={s.searches}>
-//                     <ul>{
-//                         filteredData && filteredData.map((act) => <li>{act.description}</li>)
-//                     }</ul>
-//                 </div>
-//             </div>
-//         </>
-//     )
-// }
+export default Search

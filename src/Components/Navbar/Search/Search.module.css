@@ -4,13 +4,19 @@
     position: fixed;
     top: 0;
     left: 0;
+    padding: 0;
     background-color: white;
     z-index: 5;
+}
+
+.hideSearch {
+    display: none;
 }
 
 .top {
     width: 100vw;
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: .5rem;
     z-index: 5;
@@ -18,11 +24,12 @@
 
 .searchWrapper {
     display: flex;
-    width: 100%;
+    width: 80%;
     font-size: clamp(.6rem, 2vw, 1rem);
     border-radius: 1rem;
     overflow: hidden;
     box-shadow: var(--drop-shadow);
+    margin-top: 1rem;
 }
 
 .searchWrapper #searchLogo {
@@ -30,7 +37,7 @@
 }
 
 .searchWrapper>* {
-    padding: .5rem .75rem;
+    padding: 1rem 1rem;
     background: transparent;
     outline: none;
     border: 0;
@@ -50,7 +57,19 @@
     background-color: var(--thirty-percent);
 }
 
-.top>button {
+.top .mainNav {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--drop-shadow);
+}
+
+.top .mainNav>h1 {
+    margin-left: 1rem;
+}
+
+.top .mainNav>button {
     height: fit-content;
     padding: .5rem .75rem;
     font-size: clamp(.6rem, 2vw, 1rem);
@@ -63,4 +82,35 @@
     background: var(--ten-percent);
     text-decoration: none;
     margin-right: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.top .mainNav>button:hover {
+    background-color: var(--thirty-percent);
+}
+
+.searches {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.searches>ul {
+    width: 80%;
+    height: 100%;
+    margin-top: 1.5rem;
+}
+
+@media screen and (max-width: 400px) {
+    .top {
+        justify-content: space-between;
+        position: relative;
+    }
+    .searchWrapper>i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }

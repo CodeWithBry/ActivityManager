@@ -1,18 +1,16 @@
-import { useContext, useState, type Dispatch, type SetStateAction } from "react"
+import { useRef, useContext, useState, type Dispatch, type SetStateAction } from "react"
 import s from "./Navbar.module.css"
 import { context } from "../../App"
 import { Link } from "react-router-dom"
 import type { ContextType } from "../../Interfaces/interface"
-// import Search from "./Search/Search"
+import Search from "./Search/Search"
 
 
 function Navbar() {
 
     const { showLogForm } = useContext(context) as ContextType
 
-    // const searchBarRef = useRef<any>(null)
-
-    const [showSearchPrompt, setShowSearchPrompt] = useState(false)
+    const [hideSearch, setHideSearch] = useState(true)
 
     return (
         <div className={!showLogForm ? s.nav : s.navWithLogForm}>
@@ -21,24 +19,26 @@ function Navbar() {
                 <h1 id={s.title}>12 - MCCARTHY</h1>
             </div>
             <div className={s.right}>
-                {/* <div className={s.searchWrapper} onClick={()=>setShowSearchPrompt(true)}>   
-                    <Search searchInput={searchBarRef} showSearchPrompt={showSearchPrompt} setShowSearchPrompt={setShowSearchPrompt} />
-                    <i className="fa fa-search" id={s.searchLogo}></i>
-                </div> */}
+                <div className={s.searchWrap}>
+                    <div className={s.searchInput} onClick={() => setHideSearch(false)}>
+                        <Search hideSearch={hideSearch} setHideSearch={setHideSearch} />
+                        <i className="fa fa-search" id={s.searchLogo}></i>
+                    </div>
+                </div>
 
                 <button
                     id={s.hamburgerButton}
-                    onClick={() => { showSearchPrompt ? setShowSearchPrompt(false) : setShowSearchPrompt(true) }} >
+                    onClick={() => { hideSearch ? setHideSearch(false) : setHideSearch(true) }} >
                     <i className="fa fa-navicon"></i>
                 </button>
-                <RightButtons setShowSearchPrompt={setShowSearchPrompt} />
+                <RightButtons setHideSearch={setHideSearch} />
             </div>
 
-            <div className={showSearchPrompt ? `${s.dropDown} ${s.showSearchPrompt}` : `${s.dropDown} ${s.hideDropDown}  `}>
-                <RightButtons setShowSearchPrompt={setShowSearchPrompt} />
+            <div className={hideSearch ? `${s.dropDown} ${s.hideSearch}` : `${s.dropDown} ${s.hideDropDown}  `}>
+                <RightButtons setHideSearch={setHideSearch} />
                 <button
                     onClick={() => {
-                        setShowSearchPrompt(false)
+                        setHideSearch(false)
                     }}>
                     Hide Menu
                 </button>
@@ -48,7 +48,7 @@ function Navbar() {
 }
 
 function Links() {
-    const {userData} = useContext(context) as ContextType
+    const { userData } = useContext(context) as ContextType
     return <>
         {userData && <Link to={"/"} className={s.HyperLink}>
             <button className={s.authButts}>
@@ -72,10 +72,10 @@ function Links() {
 }
 
 type RightButtonProps = {
-    setShowSearchPrompt: Dispatch<SetStateAction<boolean>>
+    setHideSearch: Dispatch<SetStateAction<boolean>>
 }
 
-function RightButtons({ setShowSearchPrompt }: RightButtonProps) {
+function RightButtons({ setHideSearch }: RightButtonProps) {
 
     const { userObject, showLogForm, setShowLogForm, setShowLogOutPrompt } = useContext(context) as ContextType
 
@@ -88,7 +88,7 @@ function RightButtons({ setShowSearchPrompt }: RightButtonProps) {
                             <Links /> :
                             <>
                                 <button
-                                    onClick={() => { setShowLogOutPrompt(true), setShowSearchPrompt(false) }}>
+                                    onClick={() => { setShowLogOutPrompt(true), setHideSearch(false) }}>
                                     Sign Out
                                 </button>
                             </>
@@ -102,7 +102,7 @@ function RightButtons({ setShowSearchPrompt }: RightButtonProps) {
                                 <Link to={"/register"} id={s.signUpLink} className={s.Links}>
                                     <button className={s.authButts} id={s.signUp} onClick={() => {
                                         setShowLogForm(true)
-                                        setShowSearchPrompt(false)
+                                        setHideSearch(false)
                                     }}>
                                         Sign Up
                                     </button>
@@ -110,7 +110,7 @@ function RightButtons({ setShowSearchPrompt }: RightButtonProps) {
                                 <Link to={"/login"} id={s.logInLink} className={s.Links}>
                                     <button className={s.authButts} id={s.logIn} onClick={() => {
                                         setShowLogForm(true)
-                                        setShowSearchPrompt(false)
+                                        setHideSearch(false)
                                     }}>
                                         Log In
                                     </button>

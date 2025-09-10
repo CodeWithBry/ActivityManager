@@ -45,7 +45,7 @@ function CurrentTasks() {
               <h3>
                 Current Activities
               </h3>
-              <ul className={s.wrapper}> <li>There are no activities.</li></ul>
+              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
             </div>
         }
 
@@ -85,7 +85,7 @@ function CurrentTasks() {
               <h3>
                 Current Projects
               </h3>
-              <ul className={s.wrapper}> <li>There are no activities.</li></ul>
+              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
             </div>
         }
 
@@ -93,7 +93,7 @@ function CurrentTasks() {
           exams?.filter(act => act.status == "pending").length != 0 ?
             <div className={s.curActBox}>
               <h3>
-                Current Exams
+                Current Exams & Quizes
               </h3>
               <ul className={s.wrapper}>
                 {exams?.map((act) => {
@@ -103,9 +103,9 @@ function CurrentTasks() {
             </div> :
             <div className={s.curActBox}>
               <h3>
-                Current Exams
+                Current Exams & Quizes
               </h3>
-              <ul className={s.wrapper}> <li>There are no activities.</li></ul>
+              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
             </div>
         }
       </div>

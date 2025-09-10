@@ -82,7 +82,6 @@ function SubjectContent({ params, subjects }: Props) {
     { quarter: "4th", sem: "2nd" },
   ])
 
-
   function handleRightClick(e: MouseEvent<HTMLDivElement>, task: SchoolActivities | null, contextMenu: boolean) {
     if (contextMenu) { e.preventDefault() }
     setShowMenu(true)
@@ -111,6 +110,7 @@ function SubjectContent({ params, subjects }: Props) {
       case "Exam":
         updateActivities("exams");
         break;
+
       // Add other cases if needed: "projects", "exams", etc.
     }
 
@@ -119,16 +119,39 @@ function SubjectContent({ params, subjects }: Props) {
 
         if (!prev) return null;
         const updatedList = prev[keyInstance]?.map((origAct) => {
-          // If a specific task is passed and matches the current one
+
           if (task && task.id === origAct.id) {
-            return { ...task, status }; // Replace with the task data
+            return { ...task, status: status, isSelected: false };
           }
-          // If the activity exists locally and is selected
-          const matchingLocal = activities?.find((a) => a.id === origAct.id);
-          if (matchingLocal?.isSelected) {
-            return { ...origAct, status, isSelected: false }; // Update status immutably
+
+          const localActs = activities?.find((a) => a.id === origAct.id);
+          const localAss = assignments?.find((a) => a.id === origAct.id);
+          const localProj = projects?.find((a) => a.id === origAct.id);
+          const localExams = exams?.find((a) => a.id === origAct.id);
+
+          switch (keyInstance) {
+            case "activities":
+              if (localActs?.isSelected) {
+                return { ...origAct, status: status, isSelected: false };
+              }
+              break;
+            case "assignments":
+              if (localAss?.isSelected) {
+                return { ...origAct, status: status, isSelected: false };
+              }
+              break;
+            case "petas":
+              if (localProj?.isSelected) {
+                return { ...origAct, status: status, isSelected: false };
+              }
+              break;
+            case "activities":
+              if (localExams?.isSelected) {
+                return { ...origAct, status: status, isSelected: false };
+              }
           }
-          return origAct; // No change
+
+          return origAct;
         }) || [];
 
         // Update actDesc once, not in the loop
@@ -247,9 +270,6 @@ function SubjectContent({ params, subjects }: Props) {
       }
 
       if (activityId) {
-        const activityEl = document.getElementById(activityId);
-        activityEl?.scrollIntoView({ behavior: "smooth" });
-
 
         switch (type) {
           case "Activity":
@@ -281,11 +301,26 @@ function SubjectContent({ params, subjects }: Props) {
             })
             break;
         }
-        if (activityEl) {
-          setTimeout(() => {
-            navigation(`/subjects/${params}`)
-          }, 1000)
-        }
+
+        setTimeout(() => {
+          const activityEl = document.getElementById(activityId);
+          if (activityEl) {
+            activityEl?.scrollIntoView({ behavior: "smooth" });
+            activityEl.style.backgroundColor = "rgb(223, 223, 223)"
+            activityEl.style.scale = "1.2"
+          }
+
+          if (activityEl) {
+            setTimeout(() => {
+              navigation(`/subjects/${params}`)
+              if (activityEl) {
+                activityEl?.scrollIntoView({ behavior: "smooth" });
+                activityEl.style.backgroundColor = "white"
+                activityEl.style.scale = "1"
+              }
+            }, 1000)
+          }
+        }, 500)
 
       }
     }

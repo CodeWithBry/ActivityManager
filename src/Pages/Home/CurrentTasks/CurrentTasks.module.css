@@ -25,8 +25,8 @@
 
 .currentWrapper .currentBox>div {
     box-shadow: 0px 5px 6px 1px rgb(201, 199, 199);
-    width: 15rem;
-    height: 10rem;
+    width: 18rem;
+    height: 12rem;
     flex-shrink: 0;
     transition: .5s ease-out;
     font-weight: bold;

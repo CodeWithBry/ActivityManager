@@ -43,6 +43,12 @@
     border: 0;
 }
 
+.searchWrapper>i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .searchWrapper #searchInput+#searchButton {
     font-family: var(--font);
     font-weight: bold;
@@ -69,7 +75,7 @@
     margin-left: 1rem;
 }
 
-.top .mainNav>button {
+.top .mainNav .right>button {
     height: fit-content;
     padding: .5rem .75rem;
     font-size: clamp(.6rem, 2vw, 1rem);
@@ -86,9 +92,150 @@
     margin-bottom: 1rem;
 }
 
-.top .mainNav>button:hover {
+.top .mainNav .right>button:hover {
     background-color: var(--thirty-percent);
 }
+
+.top .mainNav .right {
+    display: flex;
+    gap: .3rem;
+    align-items: center;
+}
+
+.sortWrapper .wrapMenusButton {
+    display: none;
+}
+
+.sortWrapper .wrap,
+.sortWrapper .hideWrap {
+    display: flex;
+    align-items: center;
+}
+
+.selectedQuarter {
+    position: relative;
+}
+
+.selectedQuarter>button {
+    font-size: clamp(.5rem, 2vw, .75rem);
+    padding: .3rem .5rem;
+    margin-right: .5rem;
+    color: var(--thirty-percent);
+    font-weight: bolder;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    gap: .5rem;
+}
+
+.selectedQuarter>button>i {
+    font-weight: 900;
+}
+
+.showChoices {
+    display: block;
+}
+
+.hideChoices {
+    display: none;
+}
+
+.choicesBox {
+    position: absolute;
+    left: 50%;
+    translate: -55%;
+    width: 100%;
+    box-shadow: 0 5px 10px -5px black;
+    z-index: 1;
+}
+
+.choicesBox>button {
+    font-size: clamp(.5rem, 2vw, .75rem);
+    color: var(--thirty-percent);
+    font-weight: bolder;
+    border: none;
+    background-color: var(--sixty-percent);
+    padding: .5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    transition: all .3s ease;
+}
+
+.choicesBox>button:hover {
+    box-shadow: inset 0 0px 4px -1px rgb(125, 125, 125);
+}
+
+.hamWrapper {
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    padding: .3rem .5rem;
+    color: var(--thirty-percent);
+    font-weight: bolder;
+    border: none;
+    background-color: white;
+    border: none;
+    position: relative;
+    font-family: var(--font);
+    font-size: clamp(.5rem, 2vw, .75rem);
+}
+
+.hamWrapper>p {
+    display: flex;
+    gap: .3rem;
+}
+
+.hamWrapper .dropDownMenus {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    color: var(--thirty-percent);
+    box-shadow: 0 5px 4px -1px rgb(136, 135, 135);
+    z-index: 3;
+}
+
+.hamWrapper .dropDownMenus>li {
+    display: flex;
+    padding: .3rem .5rem;
+    font-size: clamp(.5rem, 2vw, .75rem);
+}
+
+.hamWrapper .dropDownMenus>li:hover {
+    box-shadow: inset 0 0px 4px -1px rgb(203, 203, 203);
+}
+
+.hamWrapper .dropDownMenus>li>i {
+    margin-right: .5rem;
+}
+
+.hideDropDown {
+    display: none;
+}
+
+@media screen and (max-width: 400px) {
+    .hamWrapper .dropDownMenus {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 100%;
+        background-color: white;
+        color: var(--thirty-percent);
+        box-shadow: 0 5px 4px -1px rgb(136, 135, 135);
+        z-index: 3;
+    }
+    .hamWrapper .dropDownMenus>li:hover {
+        box-shadow: inset 0 0px 4px -1px rgb(125, 125, 125);
+    }
+}
+
+
+/* BOTTOM */
 
 .searches {
     display: flex;
@@ -97,10 +244,37 @@
     height: 100%;
 }
 
-.searches>ul {
+.searches .result {
     width: 80%;
-    height: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
     margin-top: 1.5rem;
+    overflow: hidden;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.searches .result .links {
+    width: 100%;
+    height: 3rem;
+    padding: .5rem 0;
+    color: var(--thirty-percent);
+    display: flex;
+    text-wrap: nowrap;
+    align-items: center;
+    overflow: hidden;
+    background-color: transparent;
+    border: none;
+    flex-shrink: 0;
+}
+
+.searches .result .links>i {
+    margin: .5rem;
+}
+
+.searches .result .links:hover {
+    background-color: rgba(226, 224, 224, 0.513);
 }
 
 @media screen and (max-width: 400px) {
@@ -108,9 +282,76 @@
         justify-content: space-between;
         position: relative;
     }
-    .searchWrapper>i {
+    .searchWrapper>* {
+        padding: .6rem .6rem;
+        background: transparent;
+        outline: none;
+        border: 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .hideChoices {
+        display: none;
+    }
+    .sortWrapper {
+        position: relative;
+    }
+    .sortWrapper .wrap {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        color: var(--thirty-percent);
+        box-shadow: 0 5px 4px -1px rgb(136, 135, 135);
+        position: absolute;
+    }
+    .sortWrapper .hideWrap {
+        display: none;
+    }
+    .choicesBox {
+        position: relative;
+        left: 0;
+        translate: 0;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+    }
+    .selectedQuarter>button {
+        font-size: clamp(.5rem, 2vw, .75rem);
+        padding: .3rem .5rem;
+        color: var(--thirty-percent);
+        font-weight: bolder;
+        border: none;
+        background-color: transparent;
+        display: flex;
+        gap: .5rem;
+    }
+    .sortWrapper .wrap .selectedQuarter>button,
+    .sortWrapper .wrap>button {
+        width: 100%;
+        z-index: 2;
+    }
+    .sortWrapper .wrap .selectedQuarter:hover>button,
+    .sortWrapper .wrap .selectedQuarter>button:hover,
+    .sortWrapper .wrap>button:hover {
+        background-color: var(--thirty-percent);
+        color: white;
+        width: 100%;
+    }
+    .right .wrapMenusButton {
+        display: grid;
+        place-items: center;
+        margin-left: auto;
+        background-color: var(--thirty-percent);
+        color: white;
+        font-weight: bolder;
+        border: none;
+        border-radius: .3rem;
+        position: relative;
+        font-family: var(--font);
+        padding: .5rem .75rem;
+        font-size: clamp(.75rem, 2vw, 1.2rem);
     }
 }

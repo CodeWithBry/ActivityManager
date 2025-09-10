@@ -15,6 +15,7 @@
     overflow-y: scroll;
     margin-left: .5rem;
     position: relative;
+    transition: all .3s ease;
     &::-webkit-scrollbar {
         width: 5px;
     }

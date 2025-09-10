@@ -194,7 +194,7 @@ function App() {
       const userActivities = origData.activities;
       const userAssignments = origData.assignments;
       const userProjects = origData.petas;
-      const userExams = origData.petas;
+      const userExams = origData.exams;
 
       // ✅ Find NEW items (exist in Main but not in Personal)
       const newActivities = mainActivities.filter(act =>

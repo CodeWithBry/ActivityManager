@@ -10,7 +10,8 @@ function Navbar() {
 
     const { showLogForm } = useContext(context) as ContextType
 
-    const [hideSearch, setHideSearch] = useState(true)
+    const [showSearch, setShowSearch] = useState(false)
+    const [showDropDown, setShowDropDown] = useState<boolean>(false)
 
     return (
         <div className={!showLogForm ? s.nav : s.navWithLogForm}>
@@ -20,25 +21,25 @@ function Navbar() {
             </div>
             <div className={s.right}>
                 <div className={s.searchWrap}>
-                    <div className={s.searchInput} onClick={() => setHideSearch(false)}>
-                        <Search hideSearch={hideSearch} setHideSearch={setHideSearch} />
+                    <div className={s.searchInput} onClick={() => setShowSearch(true)}>
+                        <Search showSearch={showSearch} setShowSearch={setShowSearch} />
                         <i className="fa fa-search" id={s.searchLogo}></i>
                     </div>
                 </div>
 
                 <button
                     id={s.hamburgerButton}
-                    onClick={() => { hideSearch ? setHideSearch(false) : setHideSearch(true) }} >
+                    onClick={() => { showDropDown ? setShowDropDown(false) : setShowDropDown(true) }} >
                     <i className="fa fa-navicon"></i>
                 </button>
-                <RightButtons setHideSearch={setHideSearch} />
+                <RightButtons setShowDropDown={setShowDropDown} />
             </div>
 
-            <div className={hideSearch ? `${s.dropDown} ${s.hideSearch}` : `${s.dropDown} ${s.hideDropDown}  `}>
-                <RightButtons setHideSearch={setHideSearch} />
+            <div className={showDropDown ? `${s.dropDown} ${s.showDropDown}` : `${s.dropDown} ${s.hideDropDown}  `}>
+                <RightButtons setShowDropDown={setShowDropDown} />
                 <button
                     onClick={() => {
-                        setHideSearch(false)
+                        setShowDropDown(false)
                     }}>
                     Hide Menu
                 </button>
@@ -72,10 +73,10 @@ function Links() {
 }
 
 type RightButtonProps = {
-    setHideSearch: Dispatch<SetStateAction<boolean>>
+    setShowDropDown: Dispatch<SetStateAction<boolean>>
 }
 
-function RightButtons({ setHideSearch }: RightButtonProps) {
+function RightButtons({ setShowDropDown }: RightButtonProps) {
 
     const { userObject, showLogForm, setShowLogForm, setShowLogOutPrompt } = useContext(context) as ContextType
 
@@ -88,7 +89,7 @@ function RightButtons({ setHideSearch }: RightButtonProps) {
                             <Links /> :
                             <>
                                 <button
-                                    onClick={() => { setShowLogOutPrompt(true), setHideSearch(false) }}>
+                                    onClick={() => { setShowLogOutPrompt(true), setShowDropDown(false) }}>
                                     Sign Out
                                 </button>
                             </>
@@ -102,7 +103,7 @@ function RightButtons({ setHideSearch }: RightButtonProps) {
                                 <Link to={"/register"} id={s.signUpLink} className={s.Links}>
                                     <button className={s.authButts} id={s.signUp} onClick={() => {
                                         setShowLogForm(true)
-                                        setHideSearch(false)
+                                        setShowDropDown(false)
                                     }}>
                                         Sign Up
                                     </button>
@@ -110,7 +111,7 @@ function RightButtons({ setHideSearch }: RightButtonProps) {
                                 <Link to={"/login"} id={s.logInLink} className={s.Links}>
                                     <button className={s.authButts} id={s.logIn} onClick={() => {
                                         setShowLogForm(true)
-                                        setHideSearch(false)
+                                        setShowDropDown(false)
                                     }}>
                                         Log In
                                     </button>
@@ -121,5 +122,7 @@ function RightButtons({ setHideSearch }: RightButtonProps) {
         }
     </>
 }
+
+
 
 export default Navbar

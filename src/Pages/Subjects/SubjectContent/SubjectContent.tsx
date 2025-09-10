@@ -145,10 +145,11 @@ function SubjectContent({ params, subjects }: Props) {
                 return { ...origAct, status: status, isSelected: false };
               }
               break;
-            case "activities":
+            case "exams":
               if (localExams?.isSelected) {
                 return { ...origAct, status: status, isSelected: false };
               }
+              break;
           }
 
           return origAct;

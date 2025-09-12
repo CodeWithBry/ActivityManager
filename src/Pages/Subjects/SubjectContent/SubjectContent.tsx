@@ -85,8 +85,10 @@ function SubjectContent({ params, subjects }: Props) {
   function handleRightClick(e: MouseEvent<HTMLDivElement>, task: SchoolActivities | null, contextMenu: boolean) {
     if (contextMenu) { e.preventDefault() }
     const screenX = window.innerWidth
+    const screenY = window.innerHeight
     setShowMenu(true)
-    setMenuPos({ x: e.clientX + 160 > screenX ? e.clientX - ((e.clientX+160) - screenX ) : e.clientX, y: e.clientY })
+    setMenuPos({ x: e.clientX + 160 > screenX ? e.clientX - ((e.clientX+160) - screenX ) : e.clientX, 
+                 y: e.clientY + 162.86 > screenY ? e.clientY - ((e.clientY+162.86) - screenY ) : e.clientY, })
     if (task) {
       setTypeOfWork(task.typeOfWork)
       setActDesc(task)

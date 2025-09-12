@@ -1,7 +1,7 @@
 import { SubjectContentContext } from '../SubjectContent';
 import type { ContextType, SubConContextType } from '../../../../Interfaces/interface';
 import Activity from '../Activity/Activity';
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import s from "../Components/Components.module.css";
 import ActivitySkeleton from '../ActivitySkeleton/ActivitySkeleton';
 import { context } from '../../../../App';
@@ -43,11 +43,6 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
                 task.semester === selectedChoice.sem
         );
     }, [data, sortingType, selectedChoice]);
-
-
-    useEffect(()=>{
-        if(typeOfWork)console.log(typeOfWork, exams)
-    }, [typeOfWork, exams])
 
     if (!userData) {
         return <ActivitySkeleton count={6} />

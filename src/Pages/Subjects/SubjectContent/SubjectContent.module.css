@@ -251,8 +251,11 @@
         border: none;
         box-shadow: none;
     }
+    .choicesBox>button {
+        font-size: .75rem;
+    }
     .selectedChoice>button {
-        font-size: clamp(.5rem, 2vw, .75rem);
+        font-size: .75rem;
         padding: .3rem .5rem;
         color: var(--thirty-percent);
         font-weight: bolder;

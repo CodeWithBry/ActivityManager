@@ -87,6 +87,10 @@
     gap: 1rem;
 }
 
+.currentWrapper .currentBox>div .wrapper .noUnderline {
+    text-decoration: none;
+}
+
 .currentWrapper>div .wrapper>li>i {
     font-size: .75rem;
 }

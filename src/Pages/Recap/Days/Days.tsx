@@ -47,13 +47,13 @@ export default function Days({ day, daySelected, setDaySelected }: Props) {
             </ul>
           </div>
           <div className={s.activities}>
-            <h2>Exams</h2>
+            <h2>Exams And Quizzes</h2>
             <ul className={s.actWrapper}>
               {day.Exams.length != 0 ? day.Exams.map(act => 
                 <li key={act.id}>
                   <i className='fa fa-caret-right'></i> <span>{act.subject}</span>: {act.title + act.status}
                 </li>) : 
-              <li>There are no Exam</li>}
+              <li>There are no Exam nor Quiz</li>}
             </ul>
           </div>
         </div>

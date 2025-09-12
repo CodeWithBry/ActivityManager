@@ -1,8 +1,7 @@
 .subConWrapper {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    overflow-y: auto;
+    overflow: auto;
     margin: auto;
     font-family: var(--font);
     width: 100%;

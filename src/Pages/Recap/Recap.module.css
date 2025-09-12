@@ -52,6 +52,7 @@
 }
 
 .weeksDropdown {
+    height: 90px;
     position: absolute;
     top: 95%;
     left: 0;
@@ -61,7 +62,8 @@
     border: 1px solid var(--component-color);
     border-radius: 6px;
     box-shadow: var(--drop-shadow);
-    z-index: 10;
+    overflow-y: auto;
+    z-index: 1;
 }
 
 .weekWrapper .weeksDropdown {
@@ -95,6 +97,7 @@
 
 .daysWrapper {
     width: 87vw;
+    flex-shrink: 0;
     height: fit-content;
     padding: 3rem 0;
     display: flex;

@@ -45,7 +45,7 @@ function CurrentTasks() {
               <h3>
                 Current Activities
               </h3>
-              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
+              <ul className={s.wrapper}> <li className={s.noUnderline}>There are no activities.</li></ul>
             </div>
         }
 
@@ -65,7 +65,7 @@ function CurrentTasks() {
               <h3>
                 Current Assignments
               </h3>
-              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
+              <ul className={s.wrapper}> <li className={s.noUnderline}>There are no activities.</li></ul>
             </div>
         }
 
@@ -85,7 +85,7 @@ function CurrentTasks() {
               <h3>
                 Current Projects
               </h3>
-              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
+              <ul className={s.wrapper}> <li className={s.noUnderline}>There are no activities.</li></ul>
             </div>
         }
 
@@ -105,7 +105,7 @@ function CurrentTasks() {
               <h3>
                 Current Exams & Quizes
               </h3>
-              <ul className={s.wrapper}> <span>There are no activities.</span></ul>
+              <ul className={s.wrapper}> <li className={s.noUnderline}>There are no activities.</li></ul>
             </div>
         }
       </div>

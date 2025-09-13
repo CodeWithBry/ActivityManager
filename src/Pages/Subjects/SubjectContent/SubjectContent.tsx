@@ -63,7 +63,7 @@ function SubjectContent({ params, subjects }: Props) {
   const [typeOfWork, setTypeOfWork] = useState<string>("")
   const [quarter, setQuarter] = useState<string>("2nd")
   const [semester, setSemester] = useState<string>("1st")
-  const [sortingType, setSortingType] = useState<string>("Pending")
+  const [sortingType, setSortingType] = useState<string>("Newest-Oldest")
 
   const [actDesc, setActDesc] = useState<SchoolActivities | null>(null)
   const [menuPos, setMenuPos] = useState<MenuPosition>({ x: 0, y: 0 })
@@ -87,8 +87,10 @@ function SubjectContent({ params, subjects }: Props) {
     const screenX = window.innerWidth
     const screenY = window.innerHeight
     setShowMenu(true)
-    setMenuPos({ x: e.clientX + 160 > screenX ? e.clientX - ((e.clientX+160) - screenX ) : e.clientX, 
-                 y: e.clientY + 162.86 > screenY ? e.clientY - ((e.clientY+162.86) - screenY ) : e.clientY, })
+    setMenuPos({
+      x: e.clientX + 160 > screenX ? e.clientX - ((e.clientX + 160) - screenX) : e.clientX,
+      y: e.clientY + 162.86 > screenY ? e.clientY - ((e.clientY + 162.86) - screenY) : e.clientY,
+    })
     if (task) {
       setTypeOfWork(task.typeOfWork)
       setActDesc(task)
@@ -135,34 +137,28 @@ function SubjectContent({ params, subjects }: Props) {
           switch (keyInstance) {
             case "activities":
               if (localActs?.isSelected) {
-                origAct.status == "pending" ? setSortingType("Pending") : setSortingType("Completed")
                 return { ...origAct, status: status, isSelected: false };
               }
               break;
             case "assignments":
               if (localAss?.isSelected) {
-                origAct.status == "pending" ? setSortingType("Pending") : setSortingType("Completed")
                 return { ...origAct, status: status, isSelected: false };
               }
               break;
             case "petas":
               if (localProj?.isSelected) {
-                origAct.status == "pending" ? setSortingType("Pending") : setSortingType("Completed")
                 return { ...origAct, status: status, isSelected: false };
               }
               break;
             case "exams":
               if (localExams?.isSelected) {
-                origAct.status == "pending" ? setSortingType("Pending") : setSortingType("Completed")
                 return { ...origAct, status: status, isSelected: false };
               }
               break;
           }
 
           return origAct;
-        }) || [];
-
-        // Update actDesc once, not in the loop
+        });
 
         setActDesc(prev => {
           if (!prev || setToNull) {
@@ -205,17 +201,10 @@ function SubjectContent({ params, subjects }: Props) {
 
 
   async function saveToDatabase(val: SchoolActivities[], typeOfWork: string) {
-
-    try {
-      if (val && typeOfWork) {
-        const docRef = doc(firestore, "McCarthy", `${userObject?.uid}`)
-        await updateDoc(docRef, {
-          [typeOfWork]: val
-        })
-      }
-    } catch (error) {
-
-    }
+    const docRef = doc(firestore, "McCarthy", `${userObject?.uid}`)
+    await updateDoc(docRef, {
+      [typeOfWork]: val
+    })
   }
 
   function slideElement(bool: boolean, defineType: string) {
@@ -254,6 +243,8 @@ function SubjectContent({ params, subjects }: Props) {
       setAssignments(userData.assignments.filter(act => act.subject === params));
       setProjects(userData.petas.filter(act => act.subject === params));
       setExams(userData.exams.filter(act => act.subject === params))
+
+      console.log(userData)
     }
   }, [userData, params])
 

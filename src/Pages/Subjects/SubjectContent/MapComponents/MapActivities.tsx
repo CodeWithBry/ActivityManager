@@ -17,8 +17,8 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
     const { userData } = useContext(context) as ContextType
 
     const data = typeOfWork === "Activity" ? activities || [] :
-                 typeOfWork === "Assignment" ? assignments || [] :
-                 typeOfWork === "Project" ? projects || [] : exams || []
+        typeOfWork === "Assignment" ? assignments || [] :
+            typeOfWork === "Project" ? projects || [] : exams || []
 
     const sortedData = useMemo(() => {
         let sorted = [...data];
@@ -37,11 +37,11 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
             sorted = sorted.filter(act => act.status === "completed");
         }
 
-        return sorted.filter(
-            (task) =>
-                task.quarter === selectedChoice.quarter &&
-                task.semester === selectedChoice.sem
+        const completeSorted = sorted.filter((task) => task.quarter === selectedChoice.quarter &&
+            task.semester === selectedChoice.sem
         );
+
+        return completeSorted
     }, [data, sortingType, selectedChoice]);
 
     if (!userData) {

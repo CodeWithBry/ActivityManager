@@ -5,7 +5,7 @@ import { SubjectContentContext } from "../SubjectContent"
 
 
 export default function Hamburger() {
-    const { setSortingType } = useContext(SubjectContentContext) as SubConContextType
+    const { setSortingType, sortingType } = useContext(SubjectContentContext) as SubConContextType
     const [showMenu, setShowMenu] = useState<boolean>(false)
     const [menuChoices, setMenuChoices] = useState<MenuChoices[]>([
         {
@@ -34,8 +34,8 @@ export default function Hamburger() {
         }
     ])
     const [selectedMenu, setSelectedMenu] = useState<MenuChoices | null>({
-        classname: "fa fa-sort-alpha-asc",
-        functionName: "A-Z"
+        classname: "fa fa-sort-numeric-asc",
+        functionName: sortingType
     })
 
     useEffect(() => {

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 function CurrentTasks() {
   const navigation = useNavigate()
   const { userData } = useContext(context) as ContextType
+
   const [activities, setActivities] = useState<SchoolActivities[] | null>(null)
   const [assignments, setAssignments] = useState<SchoolActivities[] | null>(null)
   const [projects, setProjects] = useState<SchoolActivities[] | null>(null)

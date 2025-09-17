@@ -22,7 +22,7 @@ export default function MapActivities({ typeOfWork, sortingType }: Props) {
 
     const sortedData = useMemo(() => {
         let sorted = [...data];
-
+        console.log(sorted)
         if (sortingType === "Newest-Oldest") {
             sorted.sort((a, b) => b.timeCreated - a.timeCreated);
         } else if (sortingType === "Oldest-Newest") {

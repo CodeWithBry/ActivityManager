@@ -207,7 +207,7 @@ function App() {
         !userProjects.some(u => u.id === proj.id)
       );
       const newExams = mainExams.filter(proj =>
-        !userProjects.some(u => u.id === proj.id)
+        !userExams.some(u => u.id === proj.id)
       );
 
       // ✅ Find REMOVED items (exist in Personal but not in Main)
@@ -221,7 +221,7 @@ function App() {
         !mainProjects.some(proj => proj.id === u.id)
       );
       const removedExams = userExams.filter(u =>
-        !mainProjects.some(proj => proj.id === u.id)
+        !mainExams.some(proj => proj.id === u.id)
       );
 
       // Compare removed activities to the existing activities in the personal data

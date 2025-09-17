@@ -3,6 +3,8 @@ import s from "./Components.module.css"
 import { SubjectContentContext } from "../SubjectContent";
 import type { ContextType, SchoolActivities, SubConContextType } from "../../../../Interfaces/interface";
 import { context } from "../../../../App";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { firestore } from "../../../../Firebase/Firebase";
 
 interface Props {
     task: SchoolActivities | null;
@@ -16,7 +18,8 @@ function MenuBox({ task }: Props) {
         menuPos, canSelect,
         handleRightClick, setActivities,
         setAssignments, setProjects,
-        handleSelectAll, setShowEdit } = useContext(SubjectContentContext) as SubConContextType
+        handleSelectAll, setShowEdit,
+        setExams } = useContext(SubjectContentContext) as SubConContextType
     const { userData } = useContext(context) as ContextType
 
     function handleCheck(bool: boolean) {
@@ -36,6 +39,12 @@ function MenuBox({ task }: Props) {
                     break;
                 case "Project":
                     setProjects(prev => prev ? prev.map((acts) => {
+                        if (acts.id == task?.id) return { ...acts, isSelected: bool }
+                        return acts
+                    }) : [])
+                    break;
+                case "Exam":
+                    setExams(prev => prev ? prev.map((acts) => {
                         if (acts.id == task?.id) return { ...acts, isSelected: bool }
                         return acts
                     }) : [])
@@ -70,6 +79,41 @@ function MenuBox({ task }: Props) {
             case 6:
                 setShowEdit(true)
                 break;
+            case 7:
+                if (actDesc) deleteTask(actDesc);
+                break;
+        }
+    }
+
+    async function deleteTask(act: SchoolActivities) {
+        const docRef = doc(firestore, "Main_Database", "School_Activities")
+        const getData = (await getDoc(docRef)).data()
+        const findAct = getData?.Activity.filter((origAct: SchoolActivities) => act.id != origAct.id)
+        const findAss = getData?.Assignment.filter((origAct: SchoolActivities) => act.id != origAct.id)
+        const findProj = getData?.Project.filter((origAct: SchoolActivities) => act.id != origAct.id)
+        const findExam = getData?.Exam.filter((origAct: SchoolActivities) => act.id != origAct.id)
+
+        switch (act.typeOfWork) {
+            case "Activity":
+                await updateDoc(docRef, {
+                    Activity: findAct
+                })
+                break;
+            case "Assignment":
+                await updateDoc(docRef, {
+                    Assignment: findAss
+                })
+                break;
+            case "Project":
+                await updateDoc(docRef, {
+                    Project: findProj
+                })
+                break;
+            case "Exam":
+                await updateDoc(docRef, {
+                    Exam: findExam
+                })
+                break;
         }
     }
 
@@ -84,13 +128,21 @@ function MenuBox({ task }: Props) {
 
     function EditButton() {
         if (userData?.user.status == "Owner") {
-            return <button
-                onClick={() => handleClick(6)}>
-                <i className="	fa fa-edit"></i>
-                Edit
-            </button>
+            return <>
+                <button
+                    onClick={() => handleClick(6)}>
+                    <i className="	fa fa-edit"></i>
+                    Edit
+                </button>
+                <button
+                    onClick={() => handleClick(7)}>
+                    <i className="	fa fa-trash"></i>
+                    Delete
+                </button>
+            </>
         }
     }
+
 
     return <div
         ref={menu}

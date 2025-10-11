@@ -62,7 +62,7 @@ function ActivityDescription() {
                     </div>
                 </h2>
                 <h3>{actDesc?.title}</h3>
-                <p>{actDesc?.description}</p>
+                <p>{actDesc?.description.split("\n").map((line)=>(<>{line} <br/></>))}</p>
             </div>
         </div>
     </>

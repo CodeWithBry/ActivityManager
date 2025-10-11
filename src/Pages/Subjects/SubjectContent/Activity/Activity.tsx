@@ -51,7 +51,7 @@ function Activity({ task, handleRightClick, setActDesc,  }: ActivityProps) {
         onDoubleClick={(e) => handleRightClick(e, task, true)}
         onClick={() => { setActDesc(task), handleCheck(task) }}>
         <h2>{task?.title}</h2>
-        <p>{task?.description}</p>
+        <p>{task?.description.split("\n").map((line)=>(<>{line} <br /></>))}</p>
         <Input />
     </div>
 }

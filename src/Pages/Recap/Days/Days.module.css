@@ -1,0 +1,162 @@
+.daysWrapper .dayCard {
+    width: 340px;
+    height: 500px;
+    background: var(--sixty-percent);
+    border-radius: 12px;
+    box-shadow: -10px 10px 0px 0px var(--thirty-percent), -5px 5px 0px 0px var(--thirty-percent), var(--drop-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: all .3s ease;
+}
+
+.daysWrapper:first-child {
+    margin-left: clamp(1.5rem, 2.5vw, 3rem);
+}
+
+.daysWrapper:last-child {
+    margin-right: clamp(1.5rem, 2.5vw, 3rem);
+}
+
+.selectedDay {
+    width: 100vw;
+    height: 110vh;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    translate: -50%;
+    z-index: 10;
+}
+
+.selectedDay .dayCard {
+    width: 100%;
+    height: 100%;
+    background: var(--sixty-percent);
+}
+
+.daysWrapper .dayCard:hover {
+    scale: 1.05;
+}
+
+.dayHeader {
+    position: relative;
+}
+
+.hideButton {
+    display: none;
+}
+
+.dayHeader .cancelDay {
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: var(--font);
+}
+
+.dayHeader .cancelDay:hover {
+    background-color: #eee;
+    /* Light gray on hover */
+    color: #888;
+    /* Darker gray on hover */
+}
+
+.dayHeader,
+.openDay {
+    background: var(--thirty-percent);
+    font-family: var(--font-title);
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 10px;
+    border: none;
+    transition: all .3s ease;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Adjust thumb color */
+        border-radius: 10px;
+        /* Adjust border radius */
+        border: 3px solid #f1f1f1;
+    }
+}
+
+.dayContent {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-weight: 600;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    text-wrap: nowrap;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Adjust thumb color */
+        border-radius: 10px;
+        /* Adjust border radius */
+        border: 3px solid #f1f1f1;
+    }
+}
+
+.dayContent .activities {
+    display: flex;
+    flex-direction: column;
+}
+
+.activities>h2 {
+    font-family: var(--font-title);
+    color: var(--thirty-percent);
+}
+
+.activities .actWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    gap: .5rem;
+    margin-left: .5rem;
+    font-size: clamp(.5rem, 2.5vw, 1rem);
+    color: var(--ten-percent);
+}
+
+.activities .actWrapper>li {
+    text-wrap: wrap;
+    font-family: var(--font);
+}
+
+.activities .actWrapper>li>span {
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+.openDay:hover {
+    background-color: var(--ten-percent);
+}
+
+.selectedDay .openDay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .daysWrapper .dayCard {
+        width: 270px;
+        height: 400px;
+    }
+}

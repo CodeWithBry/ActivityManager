@@ -1,0 +1,31 @@
+.subjectSkeletonBox {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(.5rem, 2vw, 1rem) clamp(1rem, 2vw, 2rem);
+    position: relative;
+    box-shadow: 0 0px 10px 0px rgba(192, 191, 191, 0.492), 0 7px 10px 0px rgba(192, 191, 191, 0.492);
+    width: 90%;
+    height: 40vh;
+    margin-top: clamp(.5rem, 2vw, 3rem);
+    font-family: var(--font);
+    gap: 1rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    transition: all .5s ease-out;
+    background-color: rgb(236, 236, 236);
+    color: var(--thirty-percent);
+    opacity: 0;
+    animation: blinking 1.5s ease infinite;
+}
+
+@keyframes blinking {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

@@ -1,0 +1,99 @@
+.subjectsWrapper {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    overflow: auto;
+    gap: .5rem;
+}
+
+.subjectsWrapper .top {
+    background: #fff;
+    color: var(--thirty-percent);
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-family: var(--font-title);
+    position: sticky;
+    top: 0;
+    box-shadow: 0 0 10px -5px rgba(0, 0, 0, 0.398);
+}
+
+.subjectsWrapper .top>h1 {
+    font-size: clamp(.8rem, 2.5vw, 1.9rem);
+}
+
+.subjectsWrapper .top>h1,
+.subjectsWrapper .top .dropDownButton {
+    margin: 0 .5rem;
+}
+
+.subjectsWrapper .top .dropDownButton {
+    font-size: clamp(.3rem, 2.5vw, 1rem);
+    height: 100%;
+    padding: .3rem .5rem;
+    margin-right: .5rem;
+    color: var(--thirty-percent);
+    background-color: transparent;
+    border: none;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    position: relative;
+    transition: .3s ease;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.subjectsWrapper .top .dropDownButton:hover {
+    color: var(--ten-percent);
+}
+
+.showChoices {
+    display: block;
+}
+
+.hideChoices {
+    display: none;
+}
+
+.choicesBox {
+    position: absolute;
+    left: 0;
+    top: 90%;
+    width: 100%;
+    box-shadow: 0 5px 10px -5px black;
+    z-index: 1;
+}
+
+.choicesBox>button {
+    font-family: var(--font-title);
+    font-size: clamp(.5rem, 2vw, .75rem);
+    color: var(--thirty-percent);
+    border: none;
+    background-color: var(--sixty-percent);
+    padding: .5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    transition: all .3s ease;
+}
+
+.choicesBox>button:hover {
+    box-shadow: inset 0 0px 4px -1px rgb(125, 125, 125);
+}
+
+.subjectsWrapper>section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.subjectsWrapper>section:last-child {
+    margin-bottom: 6rem;
+}

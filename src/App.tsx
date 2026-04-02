@@ -1,0 +1,346 @@
+import { createContext, useEffect, useState } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import s from "./App.module.css"
+import Home from './Pages/Home/Home.tsx';
+import Recap from './Pages/Recap/Recap.tsx';
+import Subjects from './Pages/Subjects/Subjects.tsx';
+// const Code = lazy(()=> import ('./Pages/Code/Code.tsx'))
+// const Account = lazy(() => import('./Pages/Users/Account.tsx'))
+
+import Navbar from './Components/Navbar/Navbar';
+import Sidebar from './Components/Sidebar/Sidebar';
+
+import ErrorPrompt from './Authentication/ErrorPrompt/ErrorPrompt.tsx';
+import ForgotPassword from './Authentication/ForgotPassword/ForgotPassword.tsx';
+import LogIn from './Authentication/LogIn/LogIn.tsx'
+import SignUp from './Authentication/SignUp/SignUp.tsx'
+
+export const context = createContext({})
+
+import type { Tab, AuthTab, ContextType, UserData, SchoolActivities } from './Interfaces/interface';
+import LogOutPrompt from './Components/LogOutPrompt/LogOutPrompt.tsx';
+import { FacebookAuthProvider, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, type User } from 'firebase/auth';
+import { auth, firestore } from './Firebase/Firebase.tsx';
+import { arrayUnion, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { FirebaseError } from 'firebase/app';
+import Loading from './Components/Loading/Loading.tsx';
+
+function App() {
+  // Navigation
+  const navigation = useNavigate()
+  // STATIC VARIABLES
+  const fromLocStor = JSON.parse(localStorage.getItem("User") as any)
+
+  // **************** STATE VARIABLES *****************
+
+  // BOOLEANS
+  const [showSideBar, setShowSideBar] = useState<boolean>(false)
+  const [showLogForm, setShowLogForm] = useState<boolean>(false)
+  const [showLogOutPrompt, setShowLogOutPrompt] = useState<boolean>(false)
+  const [basicInfo, setBasicInfo] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isFetchingUserData, setIsFetchingUserData] = useState<boolean>(true);
+
+  // STRING AND NUMERICAL VALUE
+  const [pathTo, setPathTo] = useState<string>(window.location.href)
+  const [errorDescription, setErrorDescription] = useState<string>("")
+
+  // ARRAYS & OBJECTS
+  const [userObject, setUserObject] = useState<User | null>(fromLocStor ? fromLocStor : null)
+  const [userData, setUserData] = useState<UserData | null>(null)
+  const [tabs, setTabs] = useState<Tab[]>([
+    { pageName: "Home", path: "/", element: <Home />, keyId: Math.random() * 1, icon: "fa fa-home", focus: true },
+    { pageName: "Subjects", path: `/subjects`, element: <Subjects />, keyId: Math.random() * 1, icon: "fa fa-book", focus: false },
+    { pageName: "Recap", path: "/Recap", element: <Recap />, keyId: Math.random() * 1, icon: "fa fa-calendar", focus: false },
+    // { pageName: "Code", path: "/code", element: <Code />, keyId: Math.random() * 1, icon: "	fa fa-code", focus: false },
+  ])
+
+  const [authTabs, setAuthTabs] = useState<AuthTab[]>([
+    { path: "/login", element: <LogIn />, keyId: Math.random() * 1, icon: "fa fa-book", focus: false },
+    { path: "/register", element: <SignUp />, keyId: Math.random() * 1, icon: "fa fa-home", focus: false },
+    { path: "/forgot_password", element: <ForgotPassword />, keyId: Math.random() * 1, icon: "	fa fa-check-square-o", focus: false }
+  ])
+
+  // ********** FUNCTIONS ************
+
+  // Reusable Function or Component
+
+  function pageDetector(authInd: number | null, tabInd: number | null, bool: boolean) {
+    setAuthTabs((arr: AuthTab[]) => arr.map((tab, i) => {
+      if (i === authInd && authInd != null) {
+        navigation(tab.path)
+        return { ...tab, focus: true }
+      } else {
+        return { ...tab, focus: false }
+      }
+    }
+    ))
+    setTabs((arr: Tab[]) => arr.map((tab, i) => {
+      return ({ ...tab, focus: i === tabInd && tabInd != null ? true : false })
+    }))
+    setShowLogForm(bool)
+  }
+
+  async function signInWithGoogle() {
+    try {
+      const provider = new GoogleAuthProvider
+      const result = await signInWithPopup(auth, provider)
+      handleUser(result.user)
+    } catch (error) {
+      if (error instanceof FirebaseError) setErrorDescription(error.code)
+    }
+  }
+
+  async function signInWithFacebook() {
+    const FBProvider = new FacebookAuthProvider
+
+    FBProvider.addScope("public_profile")
+    signInWithPopup(auth, FBProvider).then((result) => {
+      const user = result.user;
+      if (user) {
+        setUserObject(user)
+        handleUser(user)
+        window.location.reload()
+      }
+    }).catch((error) => { if (error instanceof FirebaseError) setErrorDescription(error.code) })
+  }
+
+  async function handleUser(user: User | null) {
+    const docRef = doc(firestore, "McCarthy", `${user?.uid}`);
+    const userListRef = doc(firestore, "Main_Database", "Users")
+    try {
+      const getUserListData = await getDoc(userListRef)
+      const getData = await getDoc(docRef);
+      const initialUserData = {
+        user: { Gmail: user?.email, firstName: "", middleInitial: "", lastName: "", uid: user?.uid },
+        activities: [],
+        exams: [],
+        assignments: [],
+        petas: [],
+        reviewers: []
+      }
+      if (!getData.exists()) {
+        await setDoc(docRef, initialUserData);
+        compareUserListAndUser()
+      } else {
+        compareUserListAndUser()
+      }
+
+      async function compareUserListAndUser() {
+        if (getUserListData.data()) {
+          const getUserLists = getUserListData.data()?.userList
+          let isAccountExist = false
+          for (let i = 0; i < getUserLists?.length; i++) {
+            if (user?.uid === getUserLists[i]?.uid) {
+              isAccountExist = true
+              break;
+            }
+          }
+          if (!isAccountExist) {
+            const getUserData = await getDoc(docRef)
+            await updateDoc(userListRef, {
+              userList: arrayUnion(getUserData.data()?.user)
+            })
+          }
+        }
+      }
+    } catch (error) {
+      if(error instanceof Error) throw new Error(error.message);
+    }
+  }
+
+  // ************* EFFECTS ************
+
+  useEffect(() => {
+    const unsubscribe_1 = onSnapshot(doc(firestore, "McCarthy", `${userObject?.uid}`), (snapshot: any) => {
+      if (snapshot.exists()) {
+        setUserData(snapshot.data())
+        handleUser(userObject)
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return () => {
+      unsubscribe_1();
+    }
+  }, [])
+
+
+  useEffect(() => {
+    const personalDatabase = doc(firestore, "McCarthy", `${userObject?.uid}`);
+    const mainDatabase = doc(firestore, "Main_Database", "School_Activities");
+
+    const unsubscribe_2 = onSnapshot(mainDatabase, async (snapshot: any) => {
+      if (!snapshot.exists()) {
+        setUserData(null);
+        return;
+      }
+
+      const getUserData = await getDoc(personalDatabase);
+      const origData = getUserData.data() as UserData | null;
+
+      if (origData == null) {
+        return
+      };
+
+      // ✅ Data from Main DB
+      const mainActivities: SchoolActivities[] = snapshot.data().Activity;
+      const mainAssignments: SchoolActivities[] = snapshot.data().Assignment;
+      const mainProjects: SchoolActivities[] = snapshot.data().Project;
+      const mainExams: SchoolActivities[] = snapshot.data().Exam;
+
+      // ✅ Data from Personal DB
+      const userActivities = origData.activities;
+      const userAssignments = origData.assignments;
+      const userProjects = origData.petas;
+      const userExams = origData.exams;
+
+      // ✅ Find NEW items (exist in Main but not in Personal)
+      const newActivities = mainActivities.filter(act =>
+        !userActivities.some(u => u.id === act.id)
+      );
+      const newAssignments = mainAssignments.filter(ass =>
+        !userAssignments.some(u => u.id === ass.id)
+      );
+      const newProjects = mainProjects.filter(proj =>
+        !userProjects.some(u => u.id === proj.id)
+      );
+      const newExams = mainExams.filter(proj =>
+        !userExams.some(u => u.id === proj.id)
+      );
+
+      // ✅ Find REMOVED items (exist in Personal but not in Main)
+      const removedActivities = userActivities.filter(u =>
+        !mainActivities.some(act => act.id === u.id)
+      );
+      const removedAssignments = userAssignments.filter(u =>
+        !mainAssignments.some(ass => ass.id === u.id)
+      );
+      const removedProjects = userProjects.filter(u =>
+        !mainProjects.some(proj => proj.id === u.id)
+      );
+      const removedExams = userExams.filter(u =>
+        !mainExams.some(proj => proj.id === u.id)
+      );
+
+      // Compare removed activities to the existing activities in the personal data
+      const filterRemovedActs = mainActivities.filter(orig => !removedActivities.some(act => orig.id == act.id))
+      const filterRemovedAss = mainAssignments.filter(orig => !removedAssignments.some(act => orig.id == act.id))
+      const filterRemovedProj = mainProjects.filter(orig => !removedProjects.some(act => orig.id == act.id))
+      const filterRemovedExams = mainExams.filter(orig => !removedExams.some(act => orig.id == act.id))
+
+      await updateDoc(personalDatabase, {
+        activities: removedActivities.length != 0 ? filterRemovedActs : [...newActivities, ...userActivities],
+        assignments: removedAssignments.length != 0 ? filterRemovedAss : [...newAssignments, ...userAssignments],
+        petas: removedProjects.length != 0 ? filterRemovedProj : [...newProjects, ...userProjects],
+        exams: removedExams.length != 0 ? filterRemovedExams : [...newExams, ...userExams],
+      })
+      return setUserData({
+        ...origData,
+        activities: removedActivities.length != 0 ? filterRemovedActs : [...newActivities, ...userActivities],
+        assignments: removedAssignments.length != 0 ? filterRemovedAss : [...newAssignments, ...userAssignments],
+        petas: removedProjects.length != 0 ? filterRemovedProj : [...newProjects, ...userProjects],
+        exams: removedExams.length != 0 ? filterRemovedExams : [...newExams, ...userExams],
+      });
+    });
+
+    return () => {
+      unsubscribe_2();
+    };
+  }, [userObject]);
+
+
+  useEffect(() => {
+    if (userData != null && userObject != null) {
+      if (userData?.user.firstName == "") {
+        navigation("/register")
+        setBasicInfo(true)
+      }
+    }
+  }, [userData, userObject])
+
+  onAuthStateChanged(auth, (user) => {
+    if (user != null && userObject) {
+      if (userObject == null) { setUserObject(user), localStorage.setItem("User", JSON.stringify(user)), handleUser(user) }
+      const docRef = doc(firestore, `McCarthy`, `${user?.uid}`)
+
+      if (!userData) {
+        getDoc(docRef).then((promise: any) => {
+          if (promise.data()?.firstName == "" || promise.data()?.middleInitial == "" || promise.data()?.lastName == "") {
+            navigation("/register")
+            setIsFetchingUserData(false);
+          }
+          handleUser(user)
+          setUserData(promise.data())
+          setIsFetchingUserData(false);
+        })
+      }
+    } else {
+      setUserObject(user), localStorage.setItem("User", JSON.stringify(user))
+      setIsFetchingUserData(false);
+    }
+
+  })
+
+
+  // ********* CONTEXT VARIRABLES ***********
+
+  const variable = {
+    // Important Data such as userData, authData, sensitiveData
+    userObject, setUserObject,
+    userData, setUserData,
+    // Boolean
+    showSideBar, setShowSideBar,
+    showLogForm, setShowLogForm,
+    showLogOutPrompt, setShowLogOutPrompt,
+    basicInfo, setBasicInfo,
+    errorDescription, setErrorDescription,
+    isLoading, setIsLoading,
+    isFetchingUserData, setIsFetchingUserData,
+
+    // String and Numbers
+    pathTo, setPathTo,
+
+    // Objects and Arrays
+    tabs, setTabs,
+
+    // Functions
+    pageDetector,
+    signInWithFacebook,
+    signInWithGoogle,
+    handleUser
+  } as ContextType
+
+  return (
+    <context.Provider value={variable}>
+      <Navbar />
+      <LogOutPrompt />
+      <ErrorPrompt />
+      <Loading isLoading={isLoading} />
+      <div
+        className={s.sbartabWrapper}
+        style={showLogForm ? { display: "none" } : { display: "flex" }}
+        onContextMenu={(e) => { e.preventDefault() }}>
+        <Sidebar />
+        <Routes>
+          {
+            tabs?.map((tab) => {
+              return <Route path={tab.path} element={tab.element} />
+            })
+          }
+          <Route path='/subjects/:subjectName' element={<Subjects />} />
+        </Routes>
+      </div>
+      <Routes>
+        {
+          authTabs?.map((tab) => {
+            return <Route path={tab.path} element={tab.element} />
+          })
+        }
+      </Routes>
+    </context.Provider>
+  )
+}
+
+export default App

@@ -1,0 +1,137 @@
+import { useContext, useEffect, useState } from "react"
+import type { ContextType, DaySelected, WeeklyRecap, Weeks } from "../../Interfaces/interface"
+import s from "./Recap.module.css"
+import { firestore } from "../../Firebase/Firebase"
+import { doc, getDoc, onSnapshot } from "firebase/firestore"
+import Days from "./Days/Days"
+import AddRecap from "./AddRecap/AddRecap"
+import { context } from "../../App"
+import SkeletonDays from "./SkeletonDays/SkeletonDays"
+
+function Recap() {
+
+  const { userData, pageDetector, userObject } = useContext(context) as ContextType
+
+  const [pauseSnap, setPauseSnap] = useState<boolean>(false)
+  const [showWeeks, setShowWeeks] = useState<boolean>(false)
+  const [showAddRecap, setShowAddRecap] = useState<boolean>(false)
+  const [editRecap, setEditRecap] = useState<boolean>(false)
+  const [showSkeleton, setShowSkeleton] = useState<boolean>(true)
+
+  const [weeklyRecaps, setWeeklyRecaps] = useState<WeeklyRecap | null>(null)
+  const [selectedWeek, setSelectedWeek] = useState<Weeks>({})
+  const [daySelected, setDaySelected] = useState<DaySelected>({day: ""})
+  const [weeksChoices, setWeekChoices] = useState<Weeks[]>([])
+
+  async function switchRecap(recapWeek: string) {
+    const recapDoc = doc(firestore, "Main_Database", "Recaps", `${recapWeek}`, `${recapWeek}`)
+    const getRecapData = (await getDoc(recapDoc))
+    const getData = getRecapData.data()
+    if (!getData) return
+    const keyInstance = recapWeek
+    const getInstanceOf: WeeklyRecap = getData[keyInstance as keyof typeof getData]
+    setWeeklyRecaps(getInstanceOf)
+  }
+
+  useEffect(() => {
+    const recapData = doc(firestore, "Main_Database", "Recaps")
+    const snap = onSnapshot(recapData, (snapshot) => {
+      setShowSkeleton(true)
+      const getListsOfDate = snapshot.data()?.ListsOfRecap
+      if (!getListsOfDate) return
+      setSelectedWeek(getListsOfDate[getListsOfDate.length - 1])
+      setWeekChoices(getListsOfDate)
+    })
+
+    return () => {
+      snap();
+    }
+  }, [])
+
+  useEffect(() => {
+    if(pauseSnap) return setPauseSnap(false);
+    const weekRecapRef = selectedWeek ? doc(firestore, "Main_Database", "Recaps", `${selectedWeek.monthAndDay}`, `${selectedWeek.monthAndDay}`) : null
+    const snap2 = selectedWeek && weekRecapRef ? onSnapshot(weekRecapRef, (snap) => {
+      async function getRecap() {
+        const recapDoc = doc(firestore, "Main_Database", "Recaps", `${weeksChoices[weeksChoices.length - 1]?.monthAndDay}`, `${weeksChoices[weeksChoices.length - 1]?.monthAndDay}`)
+        const getRecapData = (await getDoc(recapDoc))
+        const getData = getRecapData.data()
+        setShowSkeleton(false)
+        if (!getData) return
+        const keyInstance = weeksChoices[weeksChoices.length - 1]?.monthAndDay
+        const getInstanceOf = getData[keyInstance as keyof typeof getData]
+        setWeeklyRecaps(getInstanceOf)
+        setShowSkeleton(false)
+      }
+
+      if (snap.data()) getRecap();
+    }) : null
+
+    return () => {
+      if (snap2) snap2();
+    }
+  }, [selectedWeek, weeksChoices])
+
+  useEffect(() => {
+    if(!pageDetector) return
+
+    if (userObject?.uid) {
+      pageDetector(null, 2, false);
+    } else {
+      pageDetector(0, null, true);
+    }
+  }, [userObject]);
+
+  return (
+    <div className={s.recapWrapper}>
+      <AddRecap weeklyRecaps={weeklyRecaps} showAddRecap={showAddRecap} setShowAddRecap={setShowAddRecap} editRecap={editRecap} setEditRecap={setEditRecap} />
+      <div className={s.top}>
+        <h2>Weekly Recap</h2>
+        <div className={s.weekWrapper}>
+          <button
+            onClick={() => { showWeeks ? setShowWeeks(false) : setShowWeeks(true) }}
+            className={s.weekButton}
+          >
+            {selectedWeek.monthAndDay ? selectedWeek.monthAndDay : "Nothing"}
+            {!showWeeks ? <i className="fa fa-angle-down"></i> : <i className="fa fa-angle-up"></i>}
+          </button>
+
+          <ul className={showWeeks ? s.weeksDropdown : s.hideDropDown}>
+            {weeksChoices?.map((week) => (
+              <li
+                key={week.monthAndDay}
+                onClick={() => {
+                  setPauseSnap(true);
+                  setSelectedWeek(week)
+                  if (week.monthAndDay) switchRecap(week.monthAndDay)
+                }}>
+                {week.monthAndDay}
+              </li>
+            ))}
+          </ul>
+          {userData?.user.status == "Owner" &&
+            <button
+              className={s.createRecap}
+              onClick={() => setShowAddRecap(true)}>
+              Create Recap
+            </button>}
+          {userData?.user.status == "Owner" &&
+            <button
+              className={s.createRecap}
+              onClick={() => setEditRecap(true)}>
+              <i className="fa fa-edit"></i>
+            </button>
+          }
+        </div>
+      </div>
+      <div className={s.daysWrapper}>
+        {
+          !showSkeleton ? weeklyRecaps?.days.map(day => <Days key={Math.random() * 1} day={day} daySelected={daySelected} setDaySelected={setDaySelected}/>) :
+          <SkeletonDays count={5}/>
+        }
+      </div>
+    </div>
+  )
+}
+
+export default Recap

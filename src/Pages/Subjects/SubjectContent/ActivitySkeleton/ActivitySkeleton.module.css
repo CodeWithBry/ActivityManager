@@ -1,0 +1,40 @@
+.activitySkeleton {
+    flex-shrink: 0;
+    color: var(--thirty-percent);
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 5px 10px -5px black, -5px 5px 0 2px #6d6d6d4e;
+    padding: 1rem;
+    width: 10rem;
+    height: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    border-radius: .75rem;
+    overflow: hidden;
+    overflow-y: scroll;
+    margin-left: .5rem;
+    position: relative;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Adjust thumb color */
+        border-radius: 10px;
+        /* Adjust border radius */
+        border: 3px solid #f1f1f1;
+    }
+    animation: blinking 1.5s ease infinite;
+}
+
+@keyframes blinking {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
